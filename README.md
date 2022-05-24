@@ -5,7 +5,9 @@ My football simulator from https://github.com/stollaz/FootballSimv2, ported to C
 ---
 ## Why?
 
-Many game development jobs in the industry, including Sports Interactive (makers of Football Manager), require C++ experience. Porting my own simulator code from C# to C++ gives me experience in programming in C++ to prepare for the industry.
+Many game development jobs in the industry, including Sports Interactive (makers of Football Manager), require C++ experience. Porting my own simulator code from C# to C++ gives me experience in programming in C++ to prepare for the industry. 
+
+End goal can also be to experiment with graphics / GUI libraries that are standard and portable
 
 ---
 ## Introduction
