@@ -60,6 +60,7 @@ class Player{
         std::string CompactRepresentation();
         std::string PrintingRepresentation();
         std::string PrintPosition(Position p);    
+        bool Equals(Player p);
 };
 
 #endif

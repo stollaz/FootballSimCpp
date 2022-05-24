@@ -1,10 +1,25 @@
 #include <iostream>
 #include <string>
+
 #include "player.cpp"
 #include "playeringame.cpp"
+#include "team.cpp"
+#include "rotatableteam.cpp"
+#include "goal.cpp"
+/*
+    TODO:
+    - TeamSeasonStats
+    - TeamGameStats
+    - PlayerSeasonStats
+    - SeasonStats
+    - LogItem
+    - Game
+    - GameWeek
+    - MAIN
+*/
 
 using namespace std;
-#define VERSION "a.3.2022.05.24.2"
+#define VERSION "a.3.2022.05.24.3"
 
 int main(){
     fmt::print("FOOTBALL SIMULATOR VERSION {}\n\n",VERSION);
@@ -14,7 +29,14 @@ int main(){
     // Player q = Player("Striker Test", 9, Position::ST, 70,90,40,60,60,10);
     // q.DisplayStats();
 
-    PlayerInGame p_ = PlayerInGame(p);
-    p_.GiveCard();
-    p_.GiveCard();
+    // PlayerInGame p_ = PlayerInGame(p);
+    // p_.GiveCard();
+    // p_.GiveCard();
+
+    // Team t = Team("TestTeam");
+    // t.AddPlayer(p);
+    // // t.SaveTeam();
+
+    // Goal g = Goal("Ronaldo", "Manchester United", 7);
+    // g.GoalInfo();
 }

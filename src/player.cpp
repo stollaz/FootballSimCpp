@@ -139,3 +139,7 @@ std::string Player::PrintPosition(Position p){
             return "None";
     }
 }
+
+bool Player::Equals(Player p){
+    return (name == p.name && number == p.number && position == p.position && dribbling == p.dribbling && finishing == p.finishing && tackling == p.tackling && goalPrevention == p.goalPrevention && passing == p.passing && assisting == p.assisting);
+}
