@@ -45,14 +45,14 @@ and these attributes dictate how a player performs. [...]
     - As of now, been softblocked due to webscraping
   - Also plan to fix the random name generation, e.g. to separate male and female names so they don't mix in one simulation
 
-#### Changelog a.3.2022.05.24.1
+### Changelog a.3.2022.05.24.1
 - Fixed name of ItemType enum
 
-#### Changelog a.3.2022.05.24.2
+### Changelog a.3.2022.05.24.2
 - Implemented PlayerInGame
 - Began implementing Team
 
-#### Changelog a.3.2022.05.24.3
+### Changelog a.3.2022.05.24.3
 - Implemented Team
 - Implemented RotatableTeam
   - This needs testing, since I had to massively change the way sorting of lists and removal of items from vectors is done
@@ -67,3 +67,12 @@ and these attributes dictate how a player performs. [...]
   - Game
   - GameWeek
   - MAIN
+
+### Changelog a.3.2022.05.25.0
+- Implemented all the rest of the classes as headers
+  - Only missing functionality confirmed is the use of eventLog in PlayerInGame
+  - This is because doing this would mean PlayerInGame needs to import Game, but Game already imports PlayerInGame, which causes an inclusion loop
+  - Not sure how to solve this yet
+- Preparing to implement the simulation code
+
+TODO: Port 1:1 or clean-up / trim code as I port? Unsure
