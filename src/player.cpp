@@ -1,5 +1,7 @@
 #include "player.h"
 
+Player::Player(){}
+
 // Constructor for player with 1 position
 Player::Player(std::string _name, int _number, Position _position, int _dribbling, int _finishing, int _tackling, int _passing, int _assisting, int _goalPrevention){
     Player::name = _name;
@@ -93,7 +95,7 @@ void Player::DisplayStats(){
     PrintWithColour(goalPrevention);
     fmt::print("OVR: ");
     PrintWithColour(overall);
-    std::cout << "---\n";
+    fmt::print("---\n");
 }
 
 // Compact representation of player for storing
