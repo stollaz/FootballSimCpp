@@ -21,7 +21,7 @@ enum Position{
 };
 
 // Array of strings to store string representation of enum
-static const char *enum_str[] = {     
+static const char *position_str[] = {     
     "GK",
     "LB",
     "CB",

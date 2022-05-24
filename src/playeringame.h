@@ -2,6 +2,7 @@
 #define FMT_HEADER_ONLY
 #include "fmt/core.h"
 #include "fmt/color.h"
+// #include "game.cpp"
 
 #ifndef PLAYERINGAME
 #define PLAYERINGAME
@@ -21,7 +22,10 @@ class PlayerInGame{
 
         // Public function headers
         void GiveCard(bool isYellow = true); // Give a card to a player of the given type
-        //void GiveCard(Game& game, bool isYellow = true) // Gamelog version, TODO
+        // void GiveCard(Game& game, bool isYellow = true); // Gamelog version, TODO
+        // The above will not work as it requires "game.h" to be included, but "game.h" already
+        //  includes "playeringame.h" (this file), so loops infinitely
+        // I have no idea if there is a solution to this, but for now cards will simply not log in eventLog
 };
 
 #endif

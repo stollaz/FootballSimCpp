@@ -60,7 +60,7 @@ Position Player::PositionType(Position p){
 // Basic representation of player as a string
 std::string Player::ToString(){
     // return "[" << number << "][" << position << "]" << name;
-    return fmt::format("[{0}][{1}] {2}",number,enum_str[position],name);
+    return fmt::format("[{0}][{1}] {2}",number,position_str[position],name);
 }
 
 // Returns colour to be used for given value range
@@ -100,7 +100,7 @@ void Player::DisplayStats(){
 
 // Compact representation of player for storing
 std::string Player::CompactRepresentation(){
-    return fmt::format("{},{},{},{},{},{},{},{},{}",name,number,enum_str[position],dribbling,finishing,tackling,passing,assisting,goalPrevention);
+    return fmt::format("{},{},{},{},{},{},{},{},{}",name,number,position_str[position],dribbling,finishing,tackling,passing,assisting,goalPrevention);
 }
 
 // Compact representation of player for printing to the screen

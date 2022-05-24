@@ -14,6 +14,7 @@ class RotatableTeam{
 
     public:
         // Constructors
+        RotatableTeam();
         RotatableTeam(std::string _name);
         
         // Attributes

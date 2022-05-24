@@ -13,6 +13,7 @@ class Team{
 
     public:
         // Constructors
+        Team();
         Team(std::string _name);
         
         // Attributes

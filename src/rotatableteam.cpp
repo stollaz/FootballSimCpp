@@ -5,6 +5,8 @@
 #include <fstream>
 #include <algorithm>
 
+RotatableTeam::RotatableTeam(){}
+
 // Constructor to create empty team with given name
 RotatableTeam::RotatableTeam(std::string _name){
     RotatableTeam::name = _name;

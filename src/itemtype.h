@@ -9,7 +9,7 @@ enum ItemType{
     TextLine
 };
 
-static const char *enum_str[] = {     
+static const char *itemtype_str[] = {     
     "Text",
     "Colour",
     "Read",

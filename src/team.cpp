@@ -4,6 +4,8 @@
 #include <iostream>
 #include <fstream>
 
+Team::Team(){}
+
 // Constructor to create empty team with given name
 Team::Team(std::string _name){
     Team::name = _name;

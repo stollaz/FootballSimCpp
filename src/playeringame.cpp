@@ -9,7 +9,6 @@ PlayerInGame::PlayerInGame(Player _player){
 
 // Method to give a player a card of the specified colour, and handle sending offs
 void PlayerInGame::GiveCard(bool isYellow){
-    // std::cout << "> ";
     fmt::print("> ");
     if (isYellow){
         if (PlayerInGame::cardValue == 1){
@@ -35,4 +34,12 @@ void PlayerInGame::GiveCard(bool isYellow){
 }
 
 // Method to give a player a card and add it to the game log (TODO)
-// void PlayerInGame::GiveCard(Game& game, bool isYellow = true);
+// void PlayerInGame::GiveCard(Game& game, bool isYellow){
+//     game.AddToLog(LogItem(ItemType::Text, "> "));
+//     if (isYellow){
+//         if (cardValue == 1){
+//             cardValue++;
+//             sentOff = true;
+//         }
+//     }
+// }
