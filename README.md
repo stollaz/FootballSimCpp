@@ -75,4 +75,6 @@ and these attributes dictate how a player performs. [...]
   - Not sure how to solve this yet
 - Preparing to implement the simulation code
 
-TODO: Port 1:1 or clean-up / trim code as I port? Unsure
+TODO: 
+- Port 1:1 or clean-up / trim code as I port? Unsure
+- Get new season data
