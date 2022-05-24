@@ -45,3 +45,7 @@ and these attributes dictate how a player performs. [...]
 
 #### Changelog a.3.2022.05.24.1
 - Fixed name of ItemType enum
+
+#### Changelog a.3.2022.05.24.2
+- Implemented PlayerInGame
+- Began implementing Team
