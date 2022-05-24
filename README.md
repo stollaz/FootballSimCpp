@@ -38,6 +38,10 @@ and these attributes dictate how a player performs. [...]
 - Implemented Position enum (position.h)
 - Implemented ItemType enum (itemtype.h)
 - Imported "fmt" library for string formatting
+- Imported assets used in FootballSimv2 project
+  - Plan is to update the stats for the 2021/22 season
+    - As of now, been softblocked due to webscraping
+  - Also plan to fix the random name generation, e.g. to separate male and female names so they don't mix in one simulation
 
 #### Changelog a.3.2022.05.24.1
 - Fixed name of ItemType enum
