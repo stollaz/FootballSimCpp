@@ -2,7 +2,7 @@
 #define ITEMTYPE
 
 // Enum to store type of action stored in playback
-enum Position{
+enum ItemType{
     Text,
     Colour,
     Read,

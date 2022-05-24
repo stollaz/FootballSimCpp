@@ -3,7 +3,7 @@
 #include "player.cpp"
 
 using namespace std;
-#define VERSION "a.3.2022.05.24.0"
+#define VERSION "a.3.2022.05.24.1"
 
 int main(){
     fmt::print("FOOTBALL SIMULATOR VERSION {}\n\n",VERSION);
