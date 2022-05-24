@@ -49,3 +49,19 @@ and these attributes dictate how a player performs. [...]
 #### Changelog a.3.2022.05.24.2
 - Implemented PlayerInGame
 - Began implementing Team
+
+#### Changelog a.3.2022.05.24.3
+- Implemented Team
+- Implemented RotatableTeam
+  - This needs testing, since I had to massively change the way sorting of lists and removal of items from vectors is done
+  - It compiles and is done according to stackoverflow posts, but has not been verified
+- Implemented Goal
+- TODO: Implement:
+  - TeamSeasonStats
+  - TeamGameStats
+  - PlayerSeasonStats
+  - SeasonStats
+  - LogItem
+  - Game
+  - GameWeek
+  - MAIN
