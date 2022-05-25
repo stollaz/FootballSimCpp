@@ -78,3 +78,8 @@ and these attributes dictate how a player performs. [...]
 TODO: 
 - Port 1:1 or clean-up / trim code as I port? Unsure
 - Get new season data
+
+### Changelog a.3.2022.05.25.1
+- Implemented menu system
+  - No functionality in terms of gameplay yet
+  - Does however avoid all known crashes and flow is correct
