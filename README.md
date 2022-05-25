@@ -89,3 +89,7 @@ TODO:
 - Sanitised all ENG1 files for non-standard characters in player names
   - Not done for other leagues, and is a long process - TODO find better method
 - Debug menu option now calulates and displays bestXI for each ENG1 team
+
+### Changelog a.3.2022.05.25.3
+- Tidied up some code by moving custom utility functions to `utils.h`
+- Also added function definition headers to the top of the main `football.cpp` file to avoid problem with functions not existing yet
