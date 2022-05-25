@@ -114,6 +114,7 @@ void RotatableTeam::GenerateBestXI(){
     
     // fmt::print("Getting best player...\n");
     bestXI[1] = GetBestPlayer(Position::LB, OrderedDFS);
+    fmt::print("Best LB: {}\n",bestXI[1].name);
     // fmt::print("Got best player done.\n");
     bestXI[1].number = 2;
     // Remove that player to avoid duplicates
@@ -187,6 +188,8 @@ void RotatableTeam::GenerateBestXI(){
         // OrderedDFS.erase(std::remove(OrderedFWS.begin(), OrderedFWS.end(),bestXI[10]),OrderedFWS.end());
     DeleteFromVector(OrderedFWS, bestXI[10]);
     }
+
+    for (Player pl : bestXI) fmt::print("{}: {}\n",name,pl.name);
 }
 
 // Get the best player in a given position
@@ -240,7 +243,7 @@ Player RotatableTeam::GetBestPlayer(Position Pos, std::vector<Player> OrderedLis
         ret = p;
     }
 
-    fmt::print("Returning best player: {}\n",ret.name);
+    // fmt::print("Returning best player: {}\n",ret.name);
 
     return ret;
 }

@@ -110,8 +110,8 @@ Player GenerateRealPlayer(fs::path p){
     vector<string> info = Split(lines[0],','); // Basic info
 
     // Create name
-    string forename = info[0];
-    string surname = info[1];
+    string forename = info[1];
+    string surname = info[0];
     string fullname = "";
     if (forename == "") fullname = surname;
     else fullname = forename + " " + surname;
