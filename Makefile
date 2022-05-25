@@ -3,7 +3,7 @@ define NEWLINE
 endef
 
 all:football.o
-	g++ src/football.cpp -o football.exe
+	g++ -std=gnu++17 src/football.cpp -o football.exe
 	@echo Executing...
 	@football.exe
 clean:

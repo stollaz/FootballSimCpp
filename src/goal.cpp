@@ -10,5 +10,5 @@ Goal::Goal(std::string _name, std::string _team, int _minute){
 }
 
 void Goal::GoalInfo(){
-    fmt::print("{}' - {} [{}]", minute, name, team);
+    fmt::print("{}' - {} [{}]\n", minute, name, team);
 }

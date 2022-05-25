@@ -143,3 +143,10 @@ std::string Player::PrintPosition(Position p){
 bool Player::Equals(Player p){
     return (name == p.name && number == p.number && position == p.position && dribbling == p.dribbling && finishing == p.finishing && tackling == p.tackling && goalPrevention == p.goalPrevention && passing == p.passing && assisting == p.assisting);
 }
+
+bool operator== ( Player & lhs, Player & rhs )
+{
+   return (lhs.name == rhs.name && lhs.number == rhs.number && lhs.position == rhs.position && lhs.dribbling == rhs.dribbling && 
+   lhs.finishing == rhs.finishing && lhs.tackling == rhs.tackling && lhs.goalPrevention == rhs.goalPrevention && 
+   lhs.passing == rhs.passing && lhs.assisting == rhs.assisting);
+}

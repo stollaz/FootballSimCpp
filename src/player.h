@@ -61,6 +61,8 @@ class Player{
         std::string PrintingRepresentation();
         std::string PrintPosition(Position p);    
         bool Equals(Player p);
+
+        friend bool operator== (Player & lhs, Player & rhs );
 };
 
 #endif

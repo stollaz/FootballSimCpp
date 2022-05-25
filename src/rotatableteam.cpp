@@ -20,7 +20,7 @@ void RotatableTeam::AddPlayer(Player p){
 
 // Initialise the team with null players
 void RotatableTeam::InitialiseTeam(){
-    for (int i = 0; i < 11; i++) players[i] = null_player;
+    for (int i = 0; i < 11; i++) bestXI[i] = null_player;
 }
 
 // Calculate the average rating of the team
@@ -31,15 +31,19 @@ void RotatableTeam::CalculateRating(){
     rating = ovr;
 }
 
-void DeleteFromVector(std::vector<Player>& list, const Player& target) 
+void DeleteFromVector(std::vector<Player>& list, Player& target) 
 {
     // find the element
-    auto iter = std::find_if(list.begin(), list.end(),
-                             [&](const Player& p){return p.name == target.name;});
+    // auto iter = std::find_if(list.begin(), list.end(),
+    //                          [&](const Player& p){return p.name == target.name;});
 
-    // if found, erase it
-    if ( iter != list.end())
-       list.erase(iter);
+    // // if found, erase it
+    // if ( iter != list.end())
+    //    list.erase(iter);
+    // list.erase(remove(list.begin(), list.end(), target), list.end());
+    for (int i = 0; i < list.size(); i++){
+        if (list[i] == target) list.erase(list.begin()+i-1);
+    }
 }
 
 // Very crude way of generating a "Best XI", likely not featuring the actual best possible set of players for a team
@@ -47,6 +51,7 @@ void DeleteFromVector(std::vector<Player>& list, const Player& target)
 // This NEEDS testing as it was ported from C# without testing
 // Specifically the removal from lists is untested, but per help from https://stackoverflow.com/questions/3385229/c-erase-vector-element-by-value-rather-than-by-position
 void RotatableTeam::GenerateBestXI(){
+    // fmt::print("Generating best XI for {}\n",name);
     // Create vectors of all players in a given position type
     std::vector<Player> _GKS;
     std::vector<Player> _DFS;
@@ -61,9 +66,14 @@ void RotatableTeam::GenerateBestXI(){
         else if (p.PositionType(p.position) == Position::FW) _FWS.push_back(p);
     }
 
+    // fmt::print("GKs Length is {}\n",_GKS.size());
+    // fmt::print("DFs Length is {}\n",_DFS.size());
+    // fmt::print("MFs Length is {}\n",_MFS.size());
+    // fmt::print("FWs Length is {}\n",_FWS.size());
+
     // If the midfielders vector is too small (the most common case) consider secondary positions too
     if (_MFS.size() < 3){
-        fmt::print("---\n");
+        // fmt::print("---\n");
         for (Player p : players){
             if (p.PositionType(p.position2) == Position::MF) _MFS.push_back(p);
         }
@@ -93,17 +103,24 @@ void RotatableTeam::GenerateBestXI(){
         if (a.positionalOverall != b.positionalOverall) return a.positionalOverall < b.positionalOverall;
         return a.finishing < b.finishing;
     });
+    
+    // fmt::print("Sorted.\n");
 
     // Get best GK is easy, just get the first from the list
     OrderedGKS[0].number = 1;
     bestXI[0] = OrderedGKS[0];
 
     // Get best DFs
+    
+    // fmt::print("Getting best player...\n");
     bestXI[1] = GetBestPlayer(Position::LB, OrderedDFS);
+    // fmt::print("Got best player done.\n");
     bestXI[1].number = 2;
     // Remove that player to avoid duplicates
     // OrderedDFS.erase(std::remove(OrderedDFS.begin(), OrderedDFS.end(),bestXI[1]),OrderedDFS.end());
+    // fmt::print("Deleting from vector 1...\n");
     DeleteFromVector(OrderedDFS, bestXI[1]);
+    // fmt::print("Deleted from vector 1 done\n");
 
     bestXI[2] = GetBestPlayer(Position::RB, OrderedDFS);
     bestXI[2].number = 3;
@@ -174,9 +191,12 @@ void RotatableTeam::GenerateBestXI(){
 
 // Get the best player in a given position
 Player RotatableTeam::GetBestPlayer(Position Pos, std::vector<Player> OrderedList){
+    // fmt::print("List size is {}\n",OrderedList.size());
     Player ret = Player("",0,Position::GK,0,0,0,0,0,0); // Create temporary empty player
     bool pFound = false;
     int i = 0;
+
+    // fmt::print("Finding best player: Start it 1\n");
 
     // Search the list for the "best" player that plays in the desired position
     while (!pFound && i < OrderedList.size()){
@@ -187,6 +207,8 @@ Player RotatableTeam::GetBestPlayer(Position Pos, std::vector<Player> OrderedLis
         }
         else i++; // Otherwise check next player
     }
+
+    // fmt::print("Finding best player: Start it 2\n");
 
     if (!pFound){ // if the desired position does not exist in the list, try again but with a general check for position type
         i = 0;
@@ -209,12 +231,16 @@ Player RotatableTeam::GetBestPlayer(Position Pos, std::vector<Player> OrderedLis
         }
     }
 
+    // fmt::print("Finding best player: Start it 3\n");
+
     // if there is still no best player found, pick the best player in the list regardless of exact position
     if (!pFound){
         Player p = OrderedList[0];
         pFound = true;
         ret = p;
     }
+
+    fmt::print("Returning best player: {}\n",ret.name);
 
     return ret;
 }
