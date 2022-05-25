@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <fstream>
 #include <locale>
+#include <time.h>
 
 #include "player.cpp"
 #include "playeringame.cpp"
@@ -28,15 +29,21 @@ namespace fs = filesystem;
 // Function definitions
 int GetValue(string s, vector<tuple<string,int>> stats);
 Position ConvertToPosition(string s);
+
 Player GenerateRealPlayer(fs::path p);
 vector<RotatableTeam> GenerateLeague();
+
+string GeneratePlayerName();
+
 void PrintTeam(Player t[]);
+
 void Debug();
 int SimOneMenu();
 int SimSeasonMenu();
 void SimulateOne();
 void SimulateSeason();
 int StartMenu();
+
 int main();
 
 /*
@@ -52,6 +59,24 @@ Mupltiple ways to simulate games
 
 Before simulation functionality, implement csv reading and team creation from file, as well as random team generation
 */
+
+string GeneratePlayerName(){
+    string firstname = "";
+    string surname = "";
+
+    srand(time(NULL));
+
+    vector<string> forenames = ReadAllLines(fs::path("assets/male-names.txt"));
+    vector<string> surnames = ReadAllLines(fs::path("assets/surnames-clean.txt"));
+
+    int num = rand() % forenames.size();
+    firstname = forenames[num];
+
+    num = rand() % surnames.size();
+    surname = surnames[num];
+
+    return fmt::format("{} {}",firstname, surname);
+}
 
 // Get value of a given stat from the given stats vector
 int GetValue(string s, vector<tuple<string,int>> stats){
@@ -284,6 +309,8 @@ void Debug(){
         for (Player p : team.bestXI) cout << p.ToString() << endl;
         fmt::print("\n\n");
     }
+
+    fmt::print("Random Name: {}\n",GeneratePlayerName());
 
     /*
     TODO:

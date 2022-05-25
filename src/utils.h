@@ -33,6 +33,21 @@ std::vector<std::string> ReadAllLines(fs::path p){
     while(getline(f, line)){ // Go through each line
         lines.push_back(line); // Add line to vector
     }
+    
+    f.close();
 
     return lines;
+}
+
+int CountLines(fs::path p){
+    std::ifstream f(p);
+    
+    int count = 0;
+
+    std::string line;
+    while(getline(f,line)) count++;
+
+    f.close();
+
+    return count;
 }
