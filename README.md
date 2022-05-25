@@ -83,3 +83,9 @@ TODO:
 - Implemented menu system
   - No functionality in terms of gameplay yet
   - Does however avoid all known crashes and flow is correct
+
+### Changelog a.3.2022.05.25.2
+- Fully implemented BestXI calculation
+- Sanitised all ENG1 files for non-standard characters in player names
+  - Not done for other leagues, and is a long process - TODO find better method
+- Debug menu option now calulates and displays bestXI for each ENG1 team
