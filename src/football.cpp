@@ -19,7 +19,7 @@
 #include "data.h"
 
 using namespace std;
-#define VERSION "a.3.2022.05.25.1"
+#define VERSION "a.3.2022.05.25.2"
 
 #include <filesystem>
 namespace fs = filesystem;
