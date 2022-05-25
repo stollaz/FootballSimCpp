@@ -33,16 +33,8 @@ void RotatableTeam::CalculateRating(){
 
 void DeleteFromVector(std::vector<Player>& list, Player& target) 
 {
-    // find the element
-    // auto iter = std::find_if(list.begin(), list.end(),
-    //                          [&](const Player& p){return p.name == target.name;});
-
-    // // if found, erase it
-    // if ( iter != list.end())
-    //    list.erase(iter);
-    // list.erase(remove(list.begin(), list.end(), target), list.end());
     for (int i = 0; i < list.size(); i++){
-        if (list[i] == target) list.erase(list.begin()+i-1);
+        if (list[i].name == target.name) list.erase(list.begin()+i);
     }
 }
 
@@ -114,7 +106,6 @@ void RotatableTeam::GenerateBestXI(){
     
     // fmt::print("Getting best player...\n");
     bestXI[1] = GetBestPlayer(Position::LB, OrderedDFS);
-    fmt::print("Best LB: {}\n",bestXI[1].name);
     // fmt::print("Got best player done.\n");
     bestXI[1].number = 2;
     // Remove that player to avoid duplicates
@@ -156,10 +147,17 @@ void RotatableTeam::GenerateBestXI(){
     // OrderedDFS.erase(std::remove(OrderedMFS.begin(), OrderedMFS.end(),bestXI[7]),OrderedMFS.end());
     DeleteFromVector(OrderedMFS, bestXI[7]);
 
-    bestXI[9] = GetBestPlayer(Position::AM, OrderedMFS);
-    bestXI[9].number = 10;
-    // OrderedDFS.erase(std::remove(OrderedMFS.begin(), OrderedMFS.end(),bestXI[9]),OrderedMFS.end());
-    DeleteFromVector(OrderedMFS, bestXI[9]);
+    if (OrderedMFS.size() == 0){
+        bestXI[9] = GetBestPlayer(Position::AM, OrderedFWS);
+        bestXI[9].number = 10;
+        DeleteFromVector(OrderedFWS, bestXI[9]);
+    }
+    else{
+        bestXI[9] = GetBestPlayer(Position::AM, OrderedMFS);
+        bestXI[9].number = 10;
+        // OrderedDFS.erase(std::remove(OrderedMFS.begin(), OrderedMFS.end(),bestXI[9]),OrderedMFS.end());
+        DeleteFromVector(OrderedMFS, bestXI[9]);
+    }
 
     bestXI[8] = GetBestPlayer(Position::ST, OrderedFWS); // ST
     bestXI[8].number = 9;
@@ -189,7 +187,7 @@ void RotatableTeam::GenerateBestXI(){
     DeleteFromVector(OrderedFWS, bestXI[10]);
     }
 
-    for (Player pl : bestXI) fmt::print("{}: {}\n",name,pl.name);
+    // for (Player pl : bestXI) fmt::print("{}: {}\n",name,pl.name);
 }
 
 // Get the best player in a given position

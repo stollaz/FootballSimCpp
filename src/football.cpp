@@ -225,12 +225,39 @@ vector<RotatableTeam> GenerateLeague(){
             Player a = GenerateRealPlayer(entry); // Generate real player from that file
             t.AddPlayer(a); // Add player to team
         }
+        t.GenerateBestXI();
         TEAMS.push_back(t);
     }
 
-    for (auto t : TEAMS) t.GenerateBestXI(); // This is currently broken - investigate
-
     return TEAMS;
+}
+
+void PrintTeam(Player t[]){
+    fmt::print("-------");
+    fmt::print("[{}]",t[9-1].overall); // ST
+    fmt::print("-------");
+    fmt::print("\n------------------\n");
+    fmt::print("[{}]",t[7-1].overall); // LM
+    fmt::print("---");
+    fmt::print("[{}]",t[10-1].overall); // AM
+    fmt::print("---");
+    fmt::print("[{}]",t[11-1].overall); // RM
+    fmt::print("\n------------------\n");
+    fmt::print("---");
+    fmt::print("[{}]",t[6-1].overall); // DM
+    fmt::print("----");
+    fmt::print("[{}]",t[8-1].overall); // DM
+    fmt::print("---");
+    fmt::print("\n------------------\n");
+    fmt::print("[{}]",t[2-1].overall); // LB
+    fmt::print("-");
+    fmt::print("[{}]",t[4-1].overall); // CB
+    fmt::print("[{}]",t[5-1].overall); // CB
+    fmt::print("-");
+    fmt::print("[{}]",t[3-1].overall); // RB
+    fmt::print("\n-------");
+    fmt::print("[{}]",t[1-1].overall); // GK
+    fmt::print("-------\n");
 }
 
 void Debug(){
@@ -259,7 +286,8 @@ void Debug(){
         // fmt::print("Best XI for {}:\n",team.name);
         fmt::print("Players in {}: {}\n",team.name, team.players.size());
         // for (Player p : team.players) cout << p.ToString() << endl;
-        for (Player p : team.bestXI) cout << p.ToString() << endl;
+        // for (Player p : team.bestXI) cout << p.ToString() << endl;
+        PrintTeam(team.bestXI);
     }
 
     /*
