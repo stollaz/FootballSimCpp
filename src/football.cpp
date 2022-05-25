@@ -17,12 +17,27 @@
 #include "gameweek.cpp"
 #include "playerseasonstats.cpp"
 #include "data.h"
+#include "utils.h"
 
 using namespace std;
 #define VERSION "a.3.2022.05.25.2"
 
 #include <filesystem>
 namespace fs = filesystem;
+
+// Function definitions
+int GetValue(string s, vector<tuple<string,int>> stats);
+Position ConvertToPosition(string s);
+Player GenerateRealPlayer(fs::path p);
+vector<RotatableTeam> GenerateLeague();
+void PrintTeam(Player t[]);
+void Debug();
+int SimOneMenu();
+int SimSeasonMenu();
+void SimulateOne();
+void SimulateSeason();
+int StartMenu();
+int main();
 
 /*
 TODO
@@ -38,31 +53,7 @@ Mupltiple ways to simulate games
 Before simulation functionality, implement csv reading and team creation from file, as well as random team generation
 */
 
-// Function to split a string based on a delimiter character
-vector<string> Split(string s, char delimiter){
-    stringstream st; // Initilaise stringstream
-    st << s; // Add string to stream
-    string segment; // Initialise segment and list
-    vector<string> seglist;
-
-    while (getline(st, segment, delimiter)) seglist.push_back(segment); // Iterate over segments and add to vector
-
-    return seglist;
-}
-
-// Function to read in a file and return it as a vector of strings (vector of lines)
-vector<string> ReadAllLines(fs::path p){
-    vector<string> lines;
-    ifstream f(p); // Open fine
-
-    string line;
-    while(getline(f, line)){ // Go through each line
-        lines.push_back(line); // Add line to vector
-    }
-
-    return lines;
-}
-
+// Get value of a given stat from the given stats vector
 int GetValue(string s, vector<tuple<string,int>> stats){
     for (tuple<string,int> stat : stats){
         if (get<0>(stat) == s) return get<1>(stat);
@@ -70,6 +61,7 @@ int GetValue(string s, vector<tuple<string,int>> stats){
     return -1;
 }
 
+// Convert a string position to a Position enum
 Position ConvertToPosition(string s){
     if (s == "GK") return Position::GK;
     else if (s == "LB") return Position::LB;
@@ -101,7 +93,7 @@ Position ConvertToPosition(string s){
     else return Position::MF;
 }
 
-// Function to generate stats for real player based on csv
+// Function to generate stats for real player based on csv and return said player
 Player GenerateRealPlayer(fs::path p){
     vector<string> lines = ReadAllLines(p);  // Get all lines of file as vector of strings
 
@@ -199,6 +191,7 @@ Player GenerateRealPlayer(fs::path p){
     return player;
 }
 
+// Function to generate all players and teams in a league and return a vector of those teams
 vector<RotatableTeam> GenerateLeague(){
     vector<RotatableTeam> ret; // Dummy return
     string regions[5] = {"ENG","ESP","FRA","ITA","GER"}; // List of regions
@@ -232,6 +225,7 @@ vector<RotatableTeam> GenerateLeague(){
     return TEAMS;
 }
 
+// Method to print out a team in both positional representation and as a list of names
 void PrintTeam(Player t[]){
     fmt::print("-------");
     if (t[9-1].number < 10) fmt::print("-[{}]",t[9-1].number); else fmt::print("[{}]",t[9-1].number) ; // ST
@@ -300,15 +294,6 @@ void Debug(){
     - "gamesimulation.h" for AttemptShot() etc.
     - "seasonsimulation.h" for SimulateSeason() etc.
     */
-}
-
-// This should go in utils
-// Function to check if a string contains only digits (e.g. it is an int)
-bool isStringInt(string s) {
-    for (int i = 0; i < s.length(); i++){
-        if (!isdigit(s[i])) return false; // Currently this only checks if every char is a digit, could extend to include '.' and '-'
-    }
-    return true;
 }
 
 // Print simulate one-off game menu choices and get input from user

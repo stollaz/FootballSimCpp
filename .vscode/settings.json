@@ -57,6 +57,7 @@
         "list": "cpp",
         "ratio": "cpp",
         "vector": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "sstream": "cpp"
     }
 }
