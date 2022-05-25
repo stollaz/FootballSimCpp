@@ -234,29 +234,29 @@ vector<RotatableTeam> GenerateLeague(){
 
 void PrintTeam(Player t[]){
     fmt::print("-------");
-    fmt::print("[{}]",t[9-1].overall); // ST
+    if (t[9-1].number < 10) fmt::print("-[{}]",t[9-1].number); else fmt::print("[{}]",t[9-1].number) ; // ST
     fmt::print("-------");
     fmt::print("\n------------------\n");
-    fmt::print("[{}]",t[7-1].overall); // LM
+    if (t[7-1].number < 10) fmt::print("[{}]-",t[7-1].number); else fmt::print("[{}]",t[7-1].number) ; // LM
     fmt::print("---");
-    fmt::print("[{}]",t[10-1].overall); // AM
+    if (t[10-1].number < 10) fmt::print("-[{}]",t[10-1].number); else fmt::print("[{}]",t[10-1].number) ; // AM
     fmt::print("---");
-    fmt::print("[{}]",t[11-1].overall); // RM
+    if (t[11-1].number < 10) fmt::print("-[{}]",t[11-1].number); else fmt::print("[{}]",t[11-1].number) ; // RM
     fmt::print("\n------------------\n");
     fmt::print("---");
-    fmt::print("[{}]",t[6-1].overall); // DM
+    if (t[6-1].number < 10) fmt::print("-[{}]",t[6-1].number); else fmt::print("[{}]",t[6-1].number) ; // DM
     fmt::print("----");
-    fmt::print("[{}]",t[8-1].overall); // DM
+    if (t[8-1].number < 10) fmt::print("-[{}]",t[8-1].number); else fmt::print("[{}]",t[8-1].number) ; // DM
     fmt::print("---");
     fmt::print("\n------------------\n");
-    fmt::print("[{}]",t[2-1].overall); // LB
+    if (t[2-1].number < 10) fmt::print("[{}]-",t[2-1].number); else fmt::print("[{}]",t[2-1].number) ; // LB
     fmt::print("-");
-    fmt::print("[{}]",t[4-1].overall); // CB
-    fmt::print("[{}]",t[5-1].overall); // CB
+    if (t[4-1].number < 10) fmt::print("-[{}]",t[4-1].number); else fmt::print("[{}]",t[4-1].number) ; // CB
+    if (t[5-1].number < 10) fmt::print("-[{}]",t[5-1].number); else fmt::print("[{}]",t[5-1].number) ; // CB
     fmt::print("-");
-    fmt::print("[{}]",t[3-1].overall); // RB
+    if (t[3-1].number < 10) fmt::print("-[{}]",t[3-1].number); else fmt::print("[{}]",t[3-1].number) ; // RB
     fmt::print("\n-------");
-    fmt::print("[{}]",t[1-1].overall); // GK
+    if (t[1-1].number < 10) fmt::print("-[{}]",t[1-1].number); else fmt::print("[{}]",t[1-1].number) ; // GK
     fmt::print("-------\n");
 }
 
@@ -286,8 +286,9 @@ void Debug(){
         // fmt::print("Best XI for {}:\n",team.name);
         fmt::print("Players in {}: {}\n",team.name, team.players.size());
         // for (Player p : team.players) cout << p.ToString() << endl;
-        // for (Player p : team.bestXI) cout << p.ToString() << endl;
         PrintTeam(team.bestXI);
+        for (Player p : team.bestXI) cout << p.ToString() << endl;
+        fmt::print("\n\n");
     }
 
     /*
