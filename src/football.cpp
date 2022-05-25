@@ -20,7 +20,7 @@
 #include "utils.h"
 
 using namespace std;
-#define VERSION "a.3.2022.05.25.2"
+#define VERSION "a.3.2022.05.25.3"
 
 #include <filesystem>
 namespace fs = filesystem;
