@@ -5,6 +5,9 @@
 #include <fstream>
 #include <locale>
 #include <time.h>
+#include <locale.h>
+#include <io.h>
+#include <fcntl.h>
 
 #include "player.cpp"
 #include "playeringame.cpp"
@@ -19,6 +22,8 @@
 #include "playerseasonstats.cpp"
 #include "data.h"
 #include "simulate.h"
+
+#include "fmt/xchar.h"
 
 using namespace std;
 #define VERSION "a.3.2022.05.30.1"
@@ -261,42 +266,114 @@ void PrintTeam(Player t[]){
     fmt::print("-------\n");
 }
 
-void Debug(){
-    // Player p = Player("Test Goalkeeper", 1, Position::GK, 0,20,40,60,80,99);
-    // p.DisplayStats();
-    // cout << "\n";
-    // Player q = Player("Striker Test", 9, Position::ST, 70,90,40,60,60,10);
-    // q.DisplayStats();
+void PrintPitch(bool bg_color = false){
+    fmt::color red = fmt::color::red;
+    fmt::color blue = fmt::color::blue;
+    fmt::color green = fmt::color::dark_green;
 
-    // PlayerInGame p_ = PlayerInGame(p);
-    // p_.GiveCard();
-    // p_.GiveCard();
+    // Pitch shape - one charatcer (y) = 5 metres, (x) = 2.5m
+    // 105x65 -> 43x13
+    vector<wstring> PITCH;
+    PITCH.push_back(L"┌─────────────────────┬─────────────────────┐");
+    PITCH.push_back(L"│                     │                     │");
+    PITCH.push_back(L"│                     │                     │");
+    PITCH.push_back(L"├─────┐               │               ┌─────┤");
+    PITCH.push_back(L"│     │               │               │     │");
+    PITCH.push_back(L"│     │               │               │     │");
+    PITCH.push_back(L"│     ├╮            ╭─┼─╮            ╭┤     │");
+    PITCH.push_back(L"│   ● ││            │ │ │            ││ ●   │");
+    PITCH.push_back(L"│     ├╯            ╰─┼─╯            ╰┤     │");
+    PITCH.push_back(L"│     │               │               │     │");
+    PITCH.push_back(L"│     │               │               │     │");
+    PITCH.push_back(L"├─────┘               │               └─────┤");
+    PITCH.push_back(L"│                     │                     │");
+    PITCH.push_back(L"│                     │                     │");
+    PITCH.push_back(L"└─────────────────────┴─────────────────────┘");
 
-    // Team t = Team("TestTeam");
-    // t.AddPlayer(p);
-    // // t.SaveTeam();
+    int players[13][43];
+    for (int i = 0; i < 13; i++){
+        for (int j = 0; j < 43; j++){
+            players[i][j] = 0;
+        }
+    }
 
-    // Goal g = Goal("Ronaldo", "Manchester United", 7);
-    // g.GoalInfo();
+    players[1][4] = 1;
+    players[1][42-4] = 2;
 
-    // RotatableTeam t = RotatableTeam("test");
+    players[1][17] = 1;
+    players[1][42-17] = 2;
 
-    // vector<RotatableTeam> teams = GenerateLeague();
+    players[6][18] = 1;
+    players[6][42-18] = 2;
 
-    // for (RotatableTeam team : teams) {
-    //     // fmt::print("Best XI for {}:\n",team.name);
-    //     fmt::print("Players in {}: {}\n",team.name, team.players.size());
-    //     // for (Player p : team.players) cout << p.ToString() << endl;
-    //     PrintTeam(team.bestXI);
-    //     for (Player p : team.bestXI) cout << p.ToString() << endl;
-    //     fmt::print("\n\n");
-    // }
+    players[6][11] = 1;
+    players[6][42-11] = 2;
 
-    // fmt::print("Random Name: {}\n",GeneratePlayerName());
-    // fmt::print("Random Team: {}\n",GenerateTeamName());
+    players[4][13] = 1;
+    players[4][42-13] = 2;
 
-    // for (double r = 4; r <= 10.0; r+=0.5) PrintRatingWithColour(r,true);
+    players[8][13] = 1;
+    players[8][42-13] = 2;
 
+    players[4][4] = 1;
+    players[4][42-4] = 2;
+
+    players[8][4] = 1;
+    players[8][42-4] = 2;
+
+    players[11][4] = 1;
+    players[11][42-4] = 2;
+
+    players[11][17] = 1;
+    players[11][42-17] = 2;
+
+    players[6][0] = 1;
+    players[6][42-0] = 2;
+
+    
+    _setmode(_fileno(stdout), 0x00020000);
+    if (bg_color){
+        fmt::print(bg(green),L"┌─────────────────────┬─────────────────────┐\n");
+        for (int i = 0; i < 13; i++){
+            if (i == 2 || i == 10) fmt::print(bg(green),L"├");
+            else fmt::print(bg(green),L"│");
+            for (int j = 0; j < 43; j++){
+                // _setmode(_fileno(stdout), 0x00020000);
+                if (players[i][j] == 0) fmt::print(bg(green),L"{}",PITCH[i+1][j+1]);
+                if (players[i][j] == 1) fmt::print(bg(green) | fg(red),L"■");
+                if (players[i][j] == 2) fmt::print(bg(green) | fg(blue),L"■");
+                // _setmode(_fileno(stdout), 0x4000);
+            }
+            if (i == 2 || i == 10) fmt::print(bg(green),L"┤");
+            else fmt::print(bg(green),L"│");
+            fmt::print(L"\n");
+        }
+        fmt::print(bg(green),L"└─────────────────────┴─────────────────────┘");
+        fmt::print(L"\n");
+    }
+    else{
+        fmt::print(L"┌─────────────────────┬─────────────────────┐\n");
+        for (int i = 0; i < 13; i++){
+            if (i == 2 || i == 10) fmt::print(L"├");
+            else fmt::print(L"│");
+            for (int j = 0; j < 43; j++){
+                // _setmode(_fileno(stdout), 0x00020000);
+                if (players[i][j] == 0) fmt::print(L"{}",PITCH[i+1][j+1]);
+                if (players[i][j] == 1) fmt::print(fg(red),L"■");
+                if (players[i][j] == 2) fmt::print(fg(blue),L"■");
+                // _setmode(_fileno(stdout), 0x4000);
+            }
+            if (i == 2 || i == 10) fmt::print(L"┤");
+            else fmt::print(L"│");
+            fmt::print(L"\n");
+        }
+        fmt::print(L"└─────────────────────┴─────────────────────┘");
+        fmt::print(L"\n");
+    }
+    _setmode(_fileno(stdout), 0x4000);
+}
+
+void TestMatch(){
     Team team1 = Team(GenerateTeamName());
 
     team1.AddPlayer(GeneratePlayer(Position::GK,1));
@@ -362,6 +439,95 @@ void Debug(){
     for (PlayerInGame p : t1.players) PrintRatingWithColour(p);
     fmt::print("\n");
     for (PlayerInGame p : t2.players) PrintRatingWithColour(p);
+}
+
+int DebugMenu(){
+    system("cls");
+    int option = -1;
+    string input;
+
+    fmt::print("\nBad Football Simulator Version {}\n",VERSION);
+    fmt::print("\nDebug Mode.\n");
+    cout << "Options:" << endl;
+    cout << "1. Simulate Test Match" << endl;
+    cout << "2. Display Pitch (no grass)" << endl;
+    cout << "3. Display Pitch (with grass)" << endl;
+    cout << "0. Back:" << endl;
+    cout << "---\n> ";
+    cin >> input;
+
+    if (!isStringInt(input)) option = -1; // If input is not a number set to default
+    else if (stoi(input) > 9 || stoi(input) < 0) option = -1; // If input is number but out of range set to default
+    else option = stoi(input); // Otherwise convert to integer
+
+    return option;
+}
+
+void Debug(){
+    // Player p = Player("Test Goalkeeper", 1, Position::GK, 0,20,40,60,80,99);
+    // p.DisplayStats();
+    // cout << "\n";
+    // Player q = Player("Striker Test", 9, Position::ST, 70,90,40,60,60,10);
+    // q.DisplayStats();
+
+    // PlayerInGame p_ = PlayerInGame(p);
+    // p_.GiveCard();
+    // p_.GiveCard();
+
+    // Team t = Team("TestTeam");
+    // t.AddPlayer(p);
+    // // t.SaveTeam();
+
+    // Goal g = Goal("Ronaldo", "Manchester United", 7);
+    // g.GoalInfo();
+
+    // RotatableTeam t = RotatableTeam("test");
+
+    // vector<RotatableTeam> teams = GenerateLeague();
+
+    // for (RotatableTeam team : teams) {
+    //     // fmt::print("Best XI for {}:\n",team.name);
+    //     fmt::print("Players in {}: {}\n",team.name, team.players.size());
+    //     // for (Player p : team.players) cout << p.ToString() << endl;
+    //     PrintTeam(team.bestXI);
+    //     for (Player p : team.bestXI) cout << p.ToString() << endl;
+    //     fmt::print("\n\n");
+    // }
+
+    // fmt::print("Random Name: {}\n",GeneratePlayerName());
+    // fmt::print("Random Team: {}\n",GenerateTeamName());
+
+    // for (double r = 4; r <= 10.0; r+=0.5) PrintRatingWithColour(r,true);
+
+    system("cls"); // Clear console
+    bool valid = false;
+    while(!valid){
+        int option = DebugMenu();
+        switch(option){
+            case 1:
+                TestMatch();
+                valid = true;
+                system("pause");
+                break;
+            case 2:
+                PrintPitch(false);
+                valid = true;
+                system("pause");
+                break;
+            case 3:
+                PrintPitch(true);
+                valid = true;
+                system("pause");
+                break;
+            case 0:
+                valid = true;
+                break;
+            default:
+                fmt::print("Unknown option.\n"); 
+                system("pause");
+                break;
+        }
+    }
 
     // default_random_engine gen = CreateGenerator();
     // normal_distribution<double> dist = CreateNormalGenerator(50,20);
@@ -531,7 +697,7 @@ int main(){
             case 9:
                 fmt::print("Debug Menu.\n");
                 Debug();
-                system("pause");
+                // system("pause");
                 break;
             case 0:
                 fmt::print("Quitting...\n");
