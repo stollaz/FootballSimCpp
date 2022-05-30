@@ -297,8 +297,6 @@ void Debug(){
 
     // for (double r = 4; r <= 10.0; r+=0.5) PrintRatingWithColour(r,true);
 
-    Game test = Game("0");
-
     Team team1 = Team(GenerateTeamName());
 
     team1.AddPlayer(GeneratePlayer(Position::GK,1));
@@ -327,8 +325,10 @@ void Debug(){
     team2.AddPlayer(GeneratePlayer(Position::CM,10));
     team2.AddPlayer(GeneratePlayer(Position::RW,11));
 
-    TeamGameStats t1 = TeamGameStats(t1);
-    TeamGameStats t2 = TeamGameStats(t2);
+    TeamGameStats t1 = TeamGameStats(team1);
+    TeamGameStats t2 = TeamGameStats(team2);
+
+    Game test = Game("0",team1, team2, t1, t2);
 
     fmt::print("Team 1: {}\n",t1.team.name);
     for (Player p : team1.players) fmt::print("{}\n",p.ToString());
@@ -336,14 +336,13 @@ void Debug(){
     fmt::print("\nTeam 2: {}\n",t2.team.name);
     for (Player p : team2.players) fmt::print("{}\n",p.ToString());
 
+    fmt::print("\n\n");
+
     AttemptPass(test, team1.players[6],team1.players[10],team1.players[5],true);
     AttemptShot(test, t1,t2,team1.players[8],true);
 
-    for (LogItem item : test.eventLog){
-        if (item.itemType == ItemType::TextLine) fmt::print("{}\n",item.itemValue);
-        else if (item.itemType == ItemType::Text) fmt::print("{}",item.itemValue);
-    }
-
+    test.PrintLog();
+    
     // default_random_engine gen = CreateGenerator();
     // normal_distribution<double> dist = CreateNormalGenerator(50,20);
 

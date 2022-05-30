@@ -23,9 +23,11 @@ class Game{
         std::vector<LogItem> eventLog;
         std::vector<Goal> goals;
 
-        Game(std::string _id);
+        Game(std::string _id, Team _team1, Team _team2, TeamGameStats _t1s, TeamGameStats _t2s) : 
+        id(_id), team1(_team1), team2(_team2), team1stats(_t1s), team2stats(_t2s){}
         void AddToLog(LogItem s);
         void AddAndPrint(LogItem s);
+        void PrintLog();
 };
 
 #endif

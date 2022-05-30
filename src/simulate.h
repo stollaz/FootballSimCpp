@@ -22,6 +22,8 @@ bool AttemptPass(Player p1, Player p2, Player p3, bool show = true){
     std::uniform_real_distribution<double> dist(0,1);
     double randnum = dist(gen);
 
+    if (show) fmt::print("> {} attempts a pass to {}...\n",p1.name, p2.name);
+
     if (randnum < passChance) {
         if (show) fmt::print("> The pass was successful.\n");
         return true;
@@ -39,12 +41,14 @@ bool AttemptPass(Game& game, Player p1, Player p2, Player p3, bool show = true){
     std::uniform_real_distribution<double> dist(0,1);
     double randnum = dist(gen);
 
+    game.AddToLog(LogItem(ItemType::TextLine,fmt::format("> {} attempts a pass to {}...",p1.name, p2.name)));
+
     if (randnum < passChance) {
-        game.AddAndPrint(LogItem(ItemType::TextLine, ("> The pass was successful.")));
+        game.AddToLog(LogItem(ItemType::TextLine, ("> The pass was successful.")));
         return true;
     }
     else{
-        game.AddAndPrint(LogItem(ItemType::TextLine, fmt::format("> The pass is intercepted by {}",p3.name)));
+        game.AddToLog(LogItem(ItemType::TextLine, fmt::format("> The pass is intercepted by {}",p3.name)));
         return false;
     }
 }
@@ -172,8 +176,8 @@ bool AttemptShot(Game& game, TeamGameStats team1stats, TeamGameStats team2stats,
     if (isTeam1) team1stats.shots++;
     else team2stats.shotAccuracy++;
 
-    if (isTeam1) game.AddToLog(LogItem(ItemType::TextLine,fmt::format("> [{}] {} attempts a shot.\n",team1stats.team.name, p1.name)));
-    else game.AddToLog(LogItem(ItemType::TextLine,fmt::format("> [{}] {} attempts a shot.\n",team2stats.team.name, p1.name)));
+    if (isTeam1) game.AddToLog(LogItem(ItemType::TextLine,fmt::format("> [{}] {} attempts a shot.",team1stats.team.name, p1.name)));
+    else game.AddToLog(LogItem(ItemType::TextLine,fmt::format("> [{}] {} attempts a shot.",team2stats.team.name, p1.name)));
     game.AddToLog(LogItem(ItemType::Text,"> "));
     // if (isTeam1) fmt::print("> [{}] {} attempts a shot.\n",team1stats.team.name, p1.name);
     // else fmt::print("> [{}] {} attempts a shot.\n",team2stats.team.name, p1.name);

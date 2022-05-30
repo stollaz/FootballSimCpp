@@ -16,22 +16,21 @@ void TeamGameStats::SetPosession(int p){
     else posession = p;
 }
 
-TeamGameStats::TeamGameStats(){}
-
-TeamGameStats::TeamGameStats(Team _team){
-    team = _team;
-    shots = 0;
-    shotsOnTarget = 0;
-    goals = 0;
-    saves = 0;
-    posession = 0;
-    fouls = 0;
-    yellowCards = 0;
-    redCards = 0;
-    passesAttempted = 0;
-    passes = 0;
-    interceptions = 0;
-    tackles = 0;
-    shotAccuracy = 0;
-    passAccuracy = 0;
-}
+// TeamGameStats::TeamGameStats(Team _team){
+//     fmt::print("ASDHSUADIHUASIDHUDAS\n");
+//     team = _team;
+//     shots = 0;
+//     shotsOnTarget = 0;
+//     goals = 0;
+//     saves = 0;
+//     posession = 0;
+//     fouls = 0;
+//     yellowCards = 0;
+//     redCards = 0;
+//     passesAttempted = 0;
+//     passes = 0;
+//     interceptions = 0;
+//     tackles = 0;
+//     shotAccuracy = 0;
+//     passAccuracy = 0;
+// }
