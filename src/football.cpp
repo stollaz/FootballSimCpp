@@ -21,7 +21,7 @@
 #include "simulate.h"
 
 using namespace std;
-#define VERSION "a.3.2022.05.30.0"
+#define VERSION "a.3.2022.05.30.1"
 
 #include <filesystem>
 namespace fs = filesystem;
