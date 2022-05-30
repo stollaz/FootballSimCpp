@@ -89,3 +89,17 @@ TODO:
 ### Changelog a.3.2022.05.25.3
 - Tidied up some code by moving custom utility functions to `utils.h`
 - Also added function definition headers to the top of the main `football.cpp` file to avoid problem with functions not existing yet
+
+---
+
+## Changelog a.3.2022.05.30.2
+- Implemented more utility functions
+  - New methods for Sigmoid and Normal generation
+  - New random number generation too
+- Implemented all basic Simulate<Action> functions, with event logging
+  - Full game simulation not yet done
+  - In doing this, had to redo a fair few classes to use default constructors properly
+- Added debug menu for multiple debugging options
+  - 1. Test match, with some simulated actions as well as event replay
+  - 2, 3. Printing of a visual pitch with player locations, with toggleable grass background colour
+    - The grass background makes printing noticably slow
