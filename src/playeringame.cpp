@@ -1,11 +1,11 @@
 #include "playeringame.h"
 
-PlayerInGame::PlayerInGame(Player _player){
-    PlayerInGame::player = _player;
-    PlayerInGame::cardValue = 0;
-    PlayerInGame::sentOff = false;
-    PlayerInGame::rating = 6.0;
-}
+// PlayerInGame::PlayerInGame(Player _player){
+//     PlayerInGame::player = _player;
+//     PlayerInGame::cardValue = 0;
+//     PlayerInGame::sentOff = false;
+//     PlayerInGame::rating = 6.0;
+// }
 
 // Method to give a player a card of the specified colour, and handle sending offs
 void PlayerInGame::GiveCard(bool isYellow){

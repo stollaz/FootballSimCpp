@@ -328,21 +328,41 @@ void Debug(){
     TeamGameStats t1 = TeamGameStats(team1);
     TeamGameStats t2 = TeamGameStats(team2);
 
+    vector<PlayerInGame> p1s;
+    for (Player p : t1.team.players) p1s.push_back(PlayerInGame(p));
+    t1.players = p1s;
+    vector<PlayerInGame> p2s;
+    for (Player p : t2.team.players) p2s.push_back(PlayerInGame(p));
+    t2.players = p2s;
+
     Game test = Game("0",team1, team2, t1, t2);
 
     fmt::print("Team 1: {}\n",t1.team.name);
-    for (Player p : team1.players) fmt::print("{}\n",p.ToString());
+    for (Player p : t1.team.players) fmt::print("{}\n",p.ToString());
 
     fmt::print("\nTeam 2: {}\n",t2.team.name);
-    for (Player p : team2.players) fmt::print("{}\n",p.ToString());
+    for (Player p : t2.team.players) fmt::print("{}\n",p.ToString());
 
     fmt::print("\n\n");
 
-    AttemptPass(test, team1.players[6],team1.players[10],team1.players[5],true);
-    AttemptShot(test, t1,t2,team1.players[8],true);
+    AttemptPass(test, t1.players[6],t1.players[10],t1.players[5],true);
+    test.AddBlankLine();
+    AttemptShot(test, t1, t2, t1.players[8],true);
+    test.AddBlankLine();
+    AttemptSetPiece(test, t1, t2, true, true);
+    test.AddBlankLine();
+    GiveCard(test, t1.players[10]);
+    test.AddBlankLine();
+    GiveCard(test, t1.players[10]);
+    test.AddBlankLine();
+    test.AddRead();
 
     test.PrintLog();
-    
+
+    for (PlayerInGame p : t1.players) PrintRatingWithColour(p);
+    fmt::print("\n");
+    for (PlayerInGame p : t2.players) PrintRatingWithColour(p);
+
     // default_random_engine gen = CreateGenerator();
     // normal_distribution<double> dist = CreateNormalGenerator(50,20);
 

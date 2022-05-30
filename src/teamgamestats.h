@@ -8,6 +8,7 @@ class TeamGameStats{
     private:
     public:
         Team team;
+        std::vector<PlayerInGame> players;
         int shots;
         int shotsOnTarget;
         int goals;

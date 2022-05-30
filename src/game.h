@@ -28,6 +28,11 @@ class Game{
         void AddToLog(LogItem s);
         void AddAndPrint(LogItem s);
         void PrintLog();
+
+        void AddText(std::string s);
+        void AddTextLine(std::string s);
+        void AddRead();
+        void AddBlankLine();
 };
 
 #endif

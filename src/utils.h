@@ -127,4 +127,21 @@ void PrintRatingWithColour(double rating, bool newline = true){
     if (newline) fmt::print("\n");
 }
 
+void PrintRatingWithColour(PlayerInGame p, bool newline = true){
+    double rating = p.rating;
+    fmt::color c;
+    if (rating <= 5.0) c = fmt::color::indian_red;
+    else if (rating < 6.0) c = fmt::color::red;
+    else if (rating < 6.5) c = fmt::color::orange;
+    else if (rating < 7.0) c = fmt::color::yellow;
+    else if (rating < 8.0) c = fmt::color::forest_green;
+    else if (rating < 9.0) c = fmt::color::lime_green; 
+    else if (rating < 10.0) c = fmt::color::turquoise;
+    else c = fmt::color::dark_turquoise;
+
+    fmt::print("{}: ",p.player.name);
+    fmt::print(fg(c),"{0:.1f}",rating);
+    if (newline) fmt::print("\n");
+}
+
 // END

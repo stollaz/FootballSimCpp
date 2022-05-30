@@ -17,3 +17,19 @@ void Game::PrintLog(){
         else if (item.itemType == ItemType::Read) system("pause");
     }
 }
+
+void Game::AddText(std::string s){
+    eventLog.push_back(LogItem(ItemType::Text,s));
+}
+
+void Game::AddTextLine(std::string s){
+    eventLog.push_back(LogItem(ItemType::TextLine,s));
+}
+
+void Game::AddRead(){
+    eventLog.push_back(LogItem(ItemType::Read,""));
+}
+
+void Game::AddBlankLine(){
+    eventLog.push_back(LogItem(ItemType::TextLine,""));
+}

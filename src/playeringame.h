@@ -12,7 +12,11 @@ class PlayerInGame{
         
     public:
         // Constructor
-        PlayerInGame(Player _player);
+        PlayerInGame(Player _player) : player(_player){
+            cardValue = 0;
+            sentOff = false;
+            rating = 6.0;
+        }
 
         // Attributes
         Player player; // Player referenced
