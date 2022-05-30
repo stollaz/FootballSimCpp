@@ -49,7 +49,7 @@ class Player{
         int mentality;      // How likely they are to make the correct decision, or to avoid a foul (UNUSED)
         int overall;
         int positionalOverall;
-        // PlayerInGame inGameStats
+        // PlayerInGame inGameStats;
 
         // Public function headers
         Position PositionType(Position p);

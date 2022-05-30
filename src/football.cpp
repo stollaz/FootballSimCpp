@@ -18,10 +18,10 @@
 #include "gameweek.cpp"
 #include "playerseasonstats.cpp"
 #include "data.h"
-#include "utils.h"
+#include "simulate.h"
 
 using namespace std;
-#define VERSION "a.3.2022.05.25.3"
+#define VERSION "a.3.2022.05.30.0"
 
 #include <filesystem>
 namespace fs = filesystem;
@@ -59,24 +59,6 @@ Mupltiple ways to simulate games
 
 Before simulation functionality, implement csv reading and team creation from file, as well as random team generation
 */
-
-string GeneratePlayerName(){
-    string firstname = "";
-    string surname = "";
-
-    srand(time(NULL));
-
-    vector<string> forenames = ReadAllLines(fs::path("assets/male-names.txt"));
-    vector<string> surnames = ReadAllLines(fs::path("assets/surnames-clean.txt"));
-
-    int num = rand() % forenames.size();
-    firstname = forenames[num];
-
-    num = rand() % surnames.size();
-    surname = surnames[num];
-
-    return fmt::format("{} {}",firstname, surname);
-}
 
 // Get value of a given stat from the given stats vector
 int GetValue(string s, vector<tuple<string,int>> stats){
@@ -299,18 +281,75 @@ void Debug(){
 
     // RotatableTeam t = RotatableTeam("test");
 
-    vector<RotatableTeam> teams = GenerateLeague();
+    // vector<RotatableTeam> teams = GenerateLeague();
 
-    for (RotatableTeam team : teams) {
-        // fmt::print("Best XI for {}:\n",team.name);
-        fmt::print("Players in {}: {}\n",team.name, team.players.size());
-        // for (Player p : team.players) cout << p.ToString() << endl;
-        PrintTeam(team.bestXI);
-        for (Player p : team.bestXI) cout << p.ToString() << endl;
-        fmt::print("\n\n");
+    // for (RotatableTeam team : teams) {
+    //     // fmt::print("Best XI for {}:\n",team.name);
+    //     fmt::print("Players in {}: {}\n",team.name, team.players.size());
+    //     // for (Player p : team.players) cout << p.ToString() << endl;
+    //     PrintTeam(team.bestXI);
+    //     for (Player p : team.bestXI) cout << p.ToString() << endl;
+    //     fmt::print("\n\n");
+    // }
+
+    // fmt::print("Random Name: {}\n",GeneratePlayerName());
+    // fmt::print("Random Team: {}\n",GenerateTeamName());
+
+    // for (double r = 4; r <= 10.0; r+=0.5) PrintRatingWithColour(r,true);
+
+    Game test = Game("0");
+
+    Team team1 = Team(GenerateTeamName());
+
+    team1.AddPlayer(GeneratePlayer(Position::GK,1));
+    team1.AddPlayer(GeneratePlayer(Position::LB,2));
+    team1.AddPlayer(GeneratePlayer(Position::RB,3));
+    team1.AddPlayer(GeneratePlayer(Position::CB,4));
+    team1.AddPlayer(GeneratePlayer(Position::CB,5));
+    team1.AddPlayer(GeneratePlayer(Position::DM,6));
+    team1.AddPlayer(GeneratePlayer(Position::LW,7));
+    team1.AddPlayer(GeneratePlayer(Position::CM,8));
+    team1.AddPlayer(GeneratePlayer(Position::ST,9));
+    team1.AddPlayer(GeneratePlayer(Position::CM,10));
+    team1.AddPlayer(GeneratePlayer(Position::RW,11));
+
+    Team team2 = Team(GenerateTeamName());
+
+    team2.AddPlayer(GeneratePlayer(Position::GK,1));
+    team2.AddPlayer(GeneratePlayer(Position::LB,2));
+    team2.AddPlayer(GeneratePlayer(Position::RB,3));
+    team2.AddPlayer(GeneratePlayer(Position::CB,4));
+    team2.AddPlayer(GeneratePlayer(Position::CB,5));
+    team2.AddPlayer(GeneratePlayer(Position::DM,6));
+    team2.AddPlayer(GeneratePlayer(Position::LW,7));
+    team2.AddPlayer(GeneratePlayer(Position::CM,8));
+    team2.AddPlayer(GeneratePlayer(Position::ST,9));
+    team2.AddPlayer(GeneratePlayer(Position::CM,10));
+    team2.AddPlayer(GeneratePlayer(Position::RW,11));
+
+    TeamGameStats t1 = TeamGameStats(t1);
+    TeamGameStats t2 = TeamGameStats(t2);
+
+    fmt::print("Team 1: {}\n",t1.team.name);
+    for (Player p : team1.players) fmt::print("{}\n",p.ToString());
+
+    fmt::print("\nTeam 2: {}\n",t2.team.name);
+    for (Player p : team2.players) fmt::print("{}\n",p.ToString());
+
+    AttemptPass(test, team1.players[6],team1.players[10],team1.players[5],true);
+    AttemptShot(test, t1,t2,team1.players[8],true);
+
+    for (LogItem item : test.eventLog){
+        if (item.itemType == ItemType::TextLine) fmt::print("{}\n",item.itemValue);
+        else if (item.itemType == ItemType::Text) fmt::print("{}",item.itemValue);
     }
 
-    fmt::print("Random Name: {}\n",GeneratePlayerName());
+    // default_random_engine gen = CreateGenerator();
+    // normal_distribution<double> dist = CreateNormalGenerator(50,20);
+
+    // for (int i = 0; i < 10; i++) {
+    //     fmt::print("Random normal: {}\n",(int)dist(gen));
+    // }
 
     /*
     TODO:
@@ -439,7 +478,7 @@ int StartMenu(){
     cout << "Options:" << endl;
     cout << "1. Simulate One-Off Match" << endl;
     cout << "2. Simulate Full Season" << endl;
-    cout << "9. Debug (Testing Combinations)" << endl;
+    cout << "9. Debug" << endl;
     cout << "0. Quit:" << endl;
     cout << "---\n> ";
     cin >> input;
@@ -454,6 +493,7 @@ int StartMenu(){
 // Main Start Point
 int main(){
     fmt::print("FOOTBALL SIMULATOR VERSION {}\n\n",VERSION);
+    srand(time(NULL));
 
     system("cls"); // Clear console
     while(true){
