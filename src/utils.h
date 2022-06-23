@@ -7,7 +7,7 @@ namespace fs = std::filesystem;
 
 // Function to check if a string contains only digits (e.g. it is an int)
 bool isStringInt(std::string s) {
-    for (int i = 0; i < s.length(); i++){
+    for (size_t i = 0; i < s.length(); i++){
         if (!isdigit(s[i])) return false; // Currently this only checks if every char is a digit, could extend to include '.' and '-'
     }
     return true;
@@ -90,6 +90,13 @@ int GenerateOneNormal(int mean, float std){
     std::normal_distribution<double> dist(mean,std);
 
     return (int)dist(generator);
+}
+
+double GenerateRandomDouble(double lower = 0.0, double higher = 1.0){
+    std::uniform_real_distribution<double> unif(lower,higher);
+    std::default_random_engine re;
+    return unif(re);
+
 }
 
 fmt::color GetColour(int x){

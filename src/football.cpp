@@ -26,7 +26,7 @@
 #include "fmt/xchar.h"
 
 using namespace std;
-#define VERSION "a.3.2022.05.30.2"
+#define VERSION "a.3.2022.06.23.0"
 
 #include <filesystem>
 namespace fs = filesystem;
@@ -137,14 +137,14 @@ Player GenerateRealPlayer(fs::path p){
     //string pos3 = positions[2];
 
     // Initialise stats
-    int FW_TOT = 0;
-    int FW_AVG = 0;
-    int MF_TOT = 0;
-    int MF_AVG = 0;
-    int DF_TOT = 0;
-    int DF_AVG = 0;
-    int GK_TOT = 0;
-    int GK_AVG = 0;
+    // int FW_TOT = 0;
+    // int FW_AVG = 0;
+    // int MF_TOT = 0;
+    // int MF_AVG = 0;
+    // int DF_TOT = 0;
+    // int DF_AVG = 0;
+    // int GK_TOT = 0;
+    // int GK_AVG = 0;
 
     int DRIBBLING = 0;
     int PASSING = 0;
@@ -155,16 +155,16 @@ Player GenerateRealPlayer(fs::path p){
 
     vector<tuple<string,int>> stats; // Vector of string-int stat tuples
 
-    int i = 3;
+    size_t i = 3;
     while (i < lines.size()){
         vector<string> line = Split(lines[i],','); // Split stat line
 
         // Find which positional type this stat falls under and increment relevant counter
         // The `find` function checks if a value is in a vector - maybe make this its own utility too
-        if (find(FW_DATA.begin(), FW_DATA.end(), line[0]) != FW_DATA.end()) FW_TOT += stoi(line[2]);
-        else if (find(MF_DATA.begin(), MF_DATA.end(), line[0]) != MF_DATA.end()) MF_TOT += stoi(line[2]);
-        else if (find(DF_DATA.begin(), DF_DATA.end(), line[0]) != DF_DATA.end()) DF_TOT += stoi(line[2]);
-        else if (find(GK_DATA.begin(), GK_DATA.end(), line[0]) != GK_DATA.end()) GK_TOT += stoi(line[2]);
+        // if (find(FW_DATA.begin(), FW_DATA.end(), line[0]) != FW_DATA.end()) FW_TOT += stoi(line[2]);
+        // else if (find(MF_DATA.begin(), MF_DATA.end(), line[0]) != MF_DATA.end()) MF_TOT += stoi(line[2]);
+        // else if (find(DF_DATA.begin(), DF_DATA.end(), line[0]) != DF_DATA.end()) DF_TOT += stoi(line[2]);
+        // else if (find(GK_DATA.begin(), GK_DATA.end(), line[0]) != GK_DATA.end()) GK_TOT += stoi(line[2]);
 
         tuple<string,int> t = make_tuple(line[0],stoi(line[2]));
         if (find(DATA.begin(), DATA.end(), line[0]) != DATA.end()) stats.push_back(t);
@@ -175,7 +175,7 @@ Player GenerateRealPlayer(fs::path p){
     // TODO: Actually parse stats and save into Player
     // This requires rounding, which is difficult in C++, so research needs to be done
     if (pos1 == "GK"){
-        GK_AVG = GK_TOT/13;
+        // GK_AVG = GK_TOT/13;
 
         DRIBBLING = (0.5 * GetValue("DEFENSIVE_ACTIONS_OUTSIDE_AREA", stats));
         PASSING = (0.25 * GetValue("TOUCHES", stats) + 0.25 * GetValue("LAUNCH_PERCENTAGE", stats) + 0.25 * GetValue("GOAL_KICKS", stats) + 0.25 * GetValue("AVG_GOAL_KICK_DISTANCE", stats));
@@ -185,9 +185,9 @@ Player GenerateRealPlayer(fs::path p){
         GOAL_PREVENTION = (0.15 * GetValue("POST_SHOT_XG-CONCEDED", stats) + 0.15 * GetValue("GOALS_CONCEDED", stats) + 0.25 * GetValue("SAVE_PERCENTAGE", stats) + 0.15 * GetValue("POST_SHOT_XG_PER_SHOT_ON_TARGET", stats) + 0.1 * GetValue("PENALTY_SAVE_PERCENTAGE", stats) + 0.2 * GetValue("CLEAN_SHEET_PERCENTAGE", stats));
     }
     else{
-        FW_AVG = FW_TOT / 7;
-        MF_AVG = MF_TOT / 7;
-        DF_AVG = DF_TOT / 6;
+        // FW_AVG = FW_TOT / 7;
+        // MF_AVG = MF_TOT / 7;
+        // DF_AVG = DF_TOT / 6;
         
         DRIBBLING = (0.4 * GetValue("PROGRESSIVE CARRIES", stats) + 0.4 * GetValue("DRIBBLES_COMPLETED", stats) + 0.1 * GetValue("TOUCHES_IN_AREA", stats) + 0.1 * GetValue("PROGRESSIVE_PASSES_RECIEVED", stats));
         PASSING = (0.3 * GetValue("PASSES_ATTEMPTED", stats) + 0.4 * GetValue("PASS_COMPLETION_PERCENTAGE", stats) + 0.3 * GetValue("PROGRESSIVE_PASSES", stats));
@@ -414,31 +414,33 @@ void TestMatch(){
 
     Game test = Game("0",team1, team2, t1, t2);
 
-    fmt::print("Team 1: {}\n",t1.team.name);
-    for (Player p : t1.team.players) fmt::print("{}\n",p.ToString());
+    SimulateGame(team1, team2, true);
 
-    fmt::print("\nTeam 2: {}\n",t2.team.name);
-    for (Player p : t2.team.players) fmt::print("{}\n",p.ToString());
+    // fmt::print("Team 1: {}\n",t1.team.name);
+    // for (Player p : t1.team.players) fmt::print("{}\n",p.ToString());
 
-    fmt::print("\n\n");
+    // fmt::print("\nTeam 2: {}\n",t2.team.name);
+    // for (Player p : t2.team.players) fmt::print("{}\n",p.ToString());
 
-    AttemptPass(test, t1.players[6],t1.players[10],t1.players[5],true);
-    test.AddBlankLine();
-    AttemptShot(test, t1, t2, t1.players[8],true);
-    test.AddBlankLine();
-    AttemptSetPiece(test, t1, t2, true, true);
-    test.AddBlankLine();
-    GiveCard(test, t1.players[10]);
-    test.AddBlankLine();
-    GiveCard(test, t1.players[10]);
-    test.AddBlankLine();
-    test.AddRead();
+    // fmt::print("\n\n");
 
-    test.PrintLog();
+    // AttemptPass(test, t1.players[6],t1.players[10],t1.players[5],true);
+    // test.AddBlankLine();
+    // AttemptShot(test, t1, t2, t1.players[8],true);
+    // test.AddBlankLine();
+    // AttemptSetPiece(test, t1, t2, true, true);
+    // test.AddBlankLine();
+    // GiveCard(test, t1.players[10]);
+    // test.AddBlankLine();
+    // GiveCard(test, t1.players[10]);
+    // test.AddBlankLine();
+    // test.AddRead();
 
-    for (PlayerInGame p : t1.players) PrintRatingWithColour(p);
-    fmt::print("\n");
-    for (PlayerInGame p : t2.players) PrintRatingWithColour(p);
+    // test.PrintLog();
+
+    // for (PlayerInGame p : t1.players) PrintRatingWithColour(p);
+    // fmt::print("\n");
+    // for (PlayerInGame p : t2.players) PrintRatingWithColour(p);
 }
 
 int DebugMenu(){
@@ -678,7 +680,7 @@ int StartMenu(){
 // Main Start Point
 int main(){
     fmt::print("FOOTBALL SIMULATOR VERSION {}\n\n",VERSION);
-    srand(time(NULL));
+    srand(time(NULL)); // Initialise randomiser with seed
 
     system("cls"); // Clear console
     while(true){

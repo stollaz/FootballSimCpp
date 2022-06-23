@@ -33,7 +33,7 @@ void RotatableTeam::CalculateRating(){
 
 void DeleteFromVector(std::vector<Player>& list, Player& target) 
 {
-    for (int i = 0; i < list.size(); i++){
+    for (size_t i = 0; i < list.size(); i++){
         if (list[i].name == target.name) list.erase(list.begin()+i);
     }
 }
@@ -195,7 +195,7 @@ Player RotatableTeam::GetBestPlayer(Position Pos, std::vector<Player> OrderedLis
     // fmt::print("List size is {}\n",OrderedList.size());
     Player ret = Player("",0,Position::GK,0,0,0,0,0,0); // Create temporary empty player
     bool pFound = false;
-    int i = 0;
+    size_t i = 0;
 
     // fmt::print("Finding best player: Start it 1\n");
 
