@@ -26,7 +26,7 @@
 #include "fmt/xchar.h"
 
 using namespace std;
-#define VERSION "a.3.2022.06.23.0"
+#define VERSION "a.3.2022.06.23.1"
 
 #include <filesystem>
 namespace fs = filesystem;
@@ -454,6 +454,7 @@ int DebugMenu(){
     cout << "1. Simulate Test Match" << endl;
     cout << "2. Display Pitch (no grass)" << endl;
     cout << "3. Display Pitch (with grass)" << endl;
+    cout << "4. Test" << endl;
     cout << "0. Back:" << endl;
     cout << "---\n> ";
     cin >> input;
@@ -463,6 +464,16 @@ int DebugMenu(){
     else option = stoi(input); // Otherwise convert to integer
 
     return option;
+}
+
+void Test(){
+    int x = 5;
+    fmt::print("Init: x = {}\n", x);
+    int *y;
+    y = &x;
+    fmt::print("Pointer: y = {}\n",fmt::ptr(y));
+    (*y)++;
+    fmt::print("Incremented: y = {}, x = {}\n", fmt::ptr(y), x);
 }
 
 void Debug(){
@@ -521,6 +532,10 @@ void Debug(){
                 valid = true;
                 system("pause");
                 break;
+            case 4:
+                Test();
+                valid = true;
+                system("pause");
             case 0:
                 valid = true;
                 break;

@@ -361,7 +361,7 @@ void GiveCard(Game& game, PlayerInGame& p, bool isYellow = true, bool show = tru
     }
 }
 
-void SimulateGame(Team team1, Team team2, bool show = true){
+void SimulateGameOld(Team team1, Team team2, bool show = true){
     fmt::print("Welcome to the game between {} and {}!\n\n",team1.name, team2.name);
 
     int team1_score = 0;
@@ -441,7 +441,7 @@ void SimulateGame(Team team1, Team team2, bool show = true){
 
                 if (passed){ // If pass was successful=
                     team1stats.posession+=3; // Alter possession numbers (refine these)
-                    team2stats.posession+=3;
+                    team2stats.posession-=3;
                     team1stats.passes++; // Incrememnt successful passes
 
                     // Alter player ratings
@@ -806,6 +806,341 @@ void SimulateGame(Team team1, Team team2, bool show = true){
 
         fmt::print("\n");
         if (show) std::cin.get();
+        isTeam1 = !isTeam1;
+    }
+
+    fmt::print(fg(fmt::color::red), "FULL TIME!\n");
+    fmt::print("Final Score: {} {} - {} {}\n", team1.name, team1_score, team2_score, team2.name);
+
+    fmt::print("\nAdditional Options: ");
+    // int option = 0;
+    // Do endgame menu
+}
+
+void SimulateGame(Team team1, Team team2, bool show = true){
+    fmt::print("Welcome to the game between {} and {}!\n\n",team1.name, team2.name);
+
+    int team1_score = 0;
+    int team2_score = 0;
+
+    std::vector<Goal> goals;
+
+    Player gk1 = team1.players[0];
+    Player gk2 = team2.players[0];
+
+    TeamGameStats team1stats = TeamGameStats(team1);
+    TeamGameStats team2stats = TeamGameStats(team2);
+
+    std::vector<PlayerInGame> playersInGame1;
+    for (Player p : team1.players){
+        playersInGame1.push_back(PlayerInGame(p)); // Double check this does what I expect
+    }
+    std::vector<PlayerInGame> playersInGame2;
+    for (Player p : team2.players){
+        playersInGame2.push_back(PlayerInGame(p)); // Double check this does what I expect
+    }
+
+    team1stats.players = playersInGame1;
+    team2stats.players = playersInGame2;
+
+    // std::default_random_engine gen = CreateGenerator();
+
+    bool isTeam1 = true;
+    
+    if (show){
+        fmt::print("Press ENTER to begin the game and to advance through the game.\n");
+        fmt::print("Press any key to continue . . .");
+        std::cin.get();
+        fmt::print("\n");
+    }
+
+    for (int i = 0; i <= 90; i+=3){ // Simulate in 5 minute increments
+        // Setup printing the time correctly
+        std::string ord = "";
+        if (i%10 == 1 && i!=11) ord = "st";
+        else if (i%10 == 2 && i!=12) ord = "nd";
+        else if (i%10 == 3 && i!=13) ord = "rd";
+        else ord = "th";
+
+        fmt::print("{}{} Minute\n",i,ord); // Print minute
+
+        fmt::print("{} {} - {} {}\n===\n",team1.name, team1_score, team2_score, team2.name); // Print current score
+
+        // Decide whether a pass, dribble or shot is attempted (0 = pass, 1 = dribble, 2 = shot)
+        int choice = rand() % 3;
+
+        // Pick 2 random players per team to execute the actions
+        PlayerInGame t1_p1 = playersInGame1[rand()%10+1]; // tX_pY = team X, player Y
+        while (t1_p1.sentOff) t1_p1 = playersInGame1[rand()%10+1];
+        PlayerInGame t1_p2 = playersInGame1[rand()%10+1];
+        while (t1_p2.sentOff) t1_p2 = playersInGame1[rand()%10+1];
+        PlayerInGame t2_p1 = playersInGame2[rand()%10+1];
+        while (t2_p1.sentOff) t2_p1 = playersInGame2[rand()%10+1];
+        PlayerInGame t2_p2 = playersInGame2[rand()%10+1];
+        while (t2_p2.sentOff) t2_p2 = playersInGame2[rand()%10+1];
+
+        // Initialise pointers to variables and functions for attacking and defending teams
+        // The attacking team is the team taking the action, and vice versa
+        // The use of pointers like this means that I don't need to reuse much of the code, only changing variables
+        // E.g. without this, I would have to do if (isTeam1) and rewrite the code for each scenario, only changing e.g. team1 to team2
+
+        Team* attackingTeam;
+        Team* defendingTeam;
+        TeamGameStats *attackingTeamStats;
+        TeamGameStats *defendingTeamStats;
+
+        PlayerInGame *attacker1;
+        PlayerInGame *attacker2;
+        PlayerInGame *defender1;
+        PlayerInGame *defender2;
+
+        int *attacker_score;
+        int *defender_score;
+
+        // TODO: Verify function pointers do what I expect
+        void (*ShowAttackingTeamScored)(Team team1, Team team2, int team1_score, int team2_score);
+        void (*ShowDefendingTeamScored)(Team team1, Team team2, int team1_score, int team2_score);
+        
+        bool attacker; // For use in function calls requiring isTeam1 - true for Team 1, false for Team 2
+        bool defender;
+
+        // Assign pointers for if Team 1 is the attacking team, and vice versa for the else
+        if (isTeam1){
+            attackingTeam = &team1;
+            defendingTeam = &team2;
+
+            attackingTeamStats = &team1stats;
+            defendingTeamStats = &team2stats;
+
+            attacker1 = &t1_p1;
+            attacker2 = &t1_p2;
+
+            defender1 = &t2_p1;
+            defender2 = &t2_p2;
+
+            attacker_score = &team1_score;
+            defender_score = &team2_score;
+
+            ShowAttackingTeamScored = &ShowTeam1Scored;
+            ShowDefendingTeamScored = &ShowTeam2Scored;
+
+            attacker = true;
+            defender = false;
+        }
+        else{
+            attackingTeam = &team2;
+            defendingTeam = &team1;
+
+            attackingTeamStats = &team2stats;
+            defendingTeamStats = &team1stats;
+
+            attacker1 = &t2_p1;
+            attacker2 = &t2_p2;
+
+            defender1 = &t1_p1;
+            defender2 = &t1_p2;
+
+            attacker_score = &team2_score;
+            defender_score = &team1_score;
+
+            ShowAttackingTeamScored = &ShowTeam2Scored;
+            ShowDefendingTeamScored = &ShowTeam1Scored;
+
+            attacker = false;
+            defender = true;
+        }
+
+        // ------------------------------------------------------
+        // Now the setup is finished, we can begin the simulation
+
+        // Base possession change for the beginning of an attack
+        (*attackingTeamStats).posession+=2;
+        (*defendingTeamStats).posession-=2;
+
+        Position pos = (*attacker1).player.position;
+        if (pos == Position::CB || pos == Position::LB || pos == Position::RB){
+            if (choice == 2) choice = rand()%3; // If defender tries to shoot, attempt a reroll
+        }
+        else if (pos == Position::ST){
+            if (choice != 2) choice = rand()%3; // If striker does anything but shoot, attempt a reroll
+        }
+
+        if (choice == 0){ // PASS
+            fmt::print("> [{}] {} attempts to pass to {}.\n",(*attackingTeam).name, (*attacker1).player.name, (*attacker2).player.name);
+
+            bool passed = AttemptPass(*attacker1, *attacker2, *defender1, show); // Determine success of pass
+            (*attackingTeamStats).passesAttempted++; // Increment attempted passes counter
+
+            if (passed){ // If pass was successful
+                (*attackingTeamStats).posession+=3; // Alter posession numbers (TODO: Refine these)
+                (*defendingTeamStats).posession-=3;
+                (*attackingTeamStats).passes++; // Increment successful passes counter
+
+                // Alter player ratings
+                (*attacker1).rating+=0.3; // Increase passer's rating for successful pass
+                (*attacker2).rating+=0.2; // Increase reciever's rating less
+                (*defender1).rating-=0.1; // Slightly decrease intercepter's rating for failed interception
+
+                // If reciever has high finishing and mentality, take a shot
+                if ((*attacker2).player.finishing >= 50){
+                    int a = rand() % 100;
+                    if ((*attacker2).player.mentality > a){
+                        bool scored = AttemptShot(team1stats, team2stats, *attacker2, attacker, show); // Shoot
+                        if (scored){
+                            (*attacker_score)++;
+                            ShowAttackingTeamScored(team1, team2, team1_score, team2_score);
+                            goals.push_back(Goal((*attacker2).player.name, (*attackingTeam).name, i));
+                        }
+                    }
+                } // Otherwise attack fails
+                // TODO: Chain passes? And dribbles? Maybe save for better engine
+            }
+            else{ // Otherwise pass is intercepted
+                (*defendingTeamStats).posession+=3;
+                (*attackingTeamStats).posession-=3;
+                (*defendingTeamStats).interceptions++;
+
+                (*attacker1).rating-=0.3; // Decrease passer's rating for failed pass
+                (*attacker2).rating-=0.1; // Decrease reciever's ratiing less
+                (*defender1).rating+=0.3; // Increase intercepter's rating for successful interception
+
+                // If intercepter has high finishing (or is a forward) and mentality, take a shot
+                if ((*defender1).player.finishing >= 50 || (*defender1).player.PositionType((*defender1).player.position) == Position::FW){
+                    int a = rand() % 100;
+                    if ((*defender1).player.mentality > a){
+                        bool scored = AttemptShot(team1stats, team2stats, *defender1, defender, show);
+                        if (scored){
+                            (*defender_score)++;
+                            ShowDefendingTeamScored(team1, team2, team1_score, team2_score);
+                            goals.push_back(Goal((*defender1).player.name, (*defendingTeam).name, i));
+                        }
+                    }
+                }
+            }
+        }
+        else if (choice == 1){ // DRIBBLE
+            fmt::print("> [{}] {} attempts to dribble.\n",(*attackingTeam).name, (*attacker1).player.name);
+
+            bool dribbled = AttemptDribble(*attacker1, *defender1, show);
+
+            if (dribbled){ // If dribble is successful
+                (*attacker1).rating+=0.5; // Incremement attacker's rating for successful dribble
+                (*defender1).rating-=0.1; // Decrease defender's rating slightly for unsucessful tackle
+                (*attackingTeamStats).posession+=3; // Amend posession
+                (*defendingTeamStats).posession-=3;
+
+                // If attacking player has high finishing and mentality, take a shot
+                if ((*attacker1).player.finishing >= 50){
+                    int a = rand() % 100;
+                    if ((*attacker1).player.mentality > a){
+                        bool scored = AttemptShot(team1stats, team2stats, *attacker1, attacker, show);
+                        if (scored){
+                            (*attacker_score)++;
+                            ShowAttackingTeamScored(team1, team2, team1_score, team2_score);
+                            goals.push_back(Goal((*attacker1).player.name, (*attackingTeam).name, i));
+                        }
+                    }
+                } // Otherwise attack fails
+            }
+            else{ // Otherwise player is tackled
+                (*defendingTeamStats).tackles++;
+
+                // If tackling player has low mentality, have a chance to commit a foul
+                int b = rand() % 50;
+                if ((*defender1).player.mentality < b){
+                    (*defender1).rating-=0.3; // Reduce rating for foul
+                    (*defendingTeamStats).fouls++;
+
+                    fmt::print("{} fouled {}.\n", (*defender1).player.name, (*attacker1).player.name);
+
+                    // Decide if a card should be shown
+                    int yellowNum = GenerateOneNormal(30,10); // Generate random number for yellow card
+                    double yellowThreshold = Sigmoid(yellowNum, (*defender1).player.mentality, -0.05, 0); // Determine mentality threshold for yellow card
+                    int redNum = GenerateOneNormal(5,2);
+                    double redThreshold = Sigmoid(redNum, (*defender1).player.mentality, -0.063, 0.5);
+                    while (redThreshold > yellowThreshold){ // Reroll until red card threshold is lower than yellow card threshold
+                        redNum = GenerateOneNormal(5,2);
+                        redThreshold = Sigmoid(redNum, (*defender1).player.mentality, -0.063, 0.5);
+                    }
+                    double randNum = GenerateRandomDouble();
+
+                    if (randNum < redThreshold){ // Player should be sent off
+                        (*defender1).GiveCard(false);
+                        (*defender1).rating-=2;
+                        (*defendingTeamStats).redCards++;
+                    }
+                    else if (randNum < yellowThreshold){ // Player should get a yellow card
+                        (*defender1).GiveCard(true);
+                        (*defender1).rating-=0.5;
+                        (*defendingTeamStats).yellowCards++;
+
+                    } // Otherwise no card
+
+                    bool scored;
+                    // If attacking player is a striker, give a penalty (TODO: Refine this)
+                    if ((*attacker1).player.position == Position::ST){
+                        scored = AttemptSetPiece(team1stats, team2stats, false, attacker, show);
+                    }
+                    // Otherwise if player plays forward, winger or centrally midfield, give random chance of penalty or free kick based on attacker mentality
+                    else if ((*attacker1).player.PositionType((*attacker1).player.position) == Position::FW 
+                            || (*attacker1).player.position == Position::AM || (*attacker1).player.position == Position::LM 
+                            || (*attacker1).player.position == Position::RM || (*attacker1).player.position == Position::CM){
+                        int c = rand() % 100;
+                        if ((*attacker1).player.mentality > c){
+                            scored = AttemptSetPiece(team1stats, team2stats, false, attacker, show); // Penalty
+                        }
+                        else{
+                            scored = AttemptSetPiece(team1stats, team2stats, true, attacker, show); // FK
+                        }
+                    }
+                    // Otherwise just a free kick (TODO: Make these not always scoreable if they're from far back, e.g. defenders)
+                    else{
+                        scored = AttemptSetPiece(team1stats, team2stats, true, attacker, show); // FK
+                    }
+
+                    if (scored){
+                        (*attacker_score)++;
+                        ShowAttackingTeamScored(team1, team2, team1_score, team2_score);
+                        goals.push_back(Goal(GetSetPieceTaker(team1stats).player.name, (*attackingTeam).name, i));
+                    }
+                }
+                // Otherwise tackle is clean, and tackler can take shot if high finishing and mentality
+                else{
+                    (*defender1).rating+=0.5;
+                    (*defendingTeamStats).posession+=3;
+                    (*attackingTeamStats).posession-=3;
+
+                    // fmt::print("> {} tackled {}.\n",(*defender1).player.name, (*attacker1).player.name);
+
+                    if ((*defender1).player.finishing >= 50){
+                        int a = rand()%100;
+                        if ((*defender1).player.mentality > a){
+                            bool scored = AttemptShot(team1stats, team2stats, *defender1, defender, show); // TOOD: Check this team is right
+                            if (scored){
+                                (*defender_score)++;
+                                ShowDefendingTeamScored(team1, team2, team1_score, team2_score);
+                                goals.push_back(Goal((*defender1).player.name, (*defendingTeam).name, i));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else{ // SHOT
+            (*attackingTeamStats).posession+=2;
+            (*defendingTeamStats).posession-=2;
+
+            bool scored = AttemptShot(team1stats, team2stats, *attacker1, attacker, show);
+            if (scored){
+                (*attacker_score)++;
+                ShowAttackingTeamScored(team1, team2, team1_score, team2_score);
+                goals.push_back(Goal((*attacker1).player.name, (*attackingTeam).name, i));
+            }
+        }
+
+        std::cin.clear();
+        if (show) { fmt::print("\n"); 
+        std::cin.get(); }
         isTeam1 = !isTeam1;
     }
 
