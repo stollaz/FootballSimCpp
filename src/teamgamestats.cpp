@@ -7,7 +7,7 @@ void TeamGameStats::CalculateShotAccuracy(){
 
 void TeamGameStats::CalculatePassAccuracy(){
     if (passesAttempted == 0) passAccuracy = 0;
-    else passAccuracy = (passesAttempted*100)/passesAttempted;
+    else passAccuracy = (passes*100)/passesAttempted;
 }
 
 void TeamGameStats::SetPosession(int p){

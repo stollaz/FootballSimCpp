@@ -32,7 +32,7 @@ class TeamGameStats{
             shotsOnTarget = 0;
             goals = 0;
             saves = 0;
-            posession = 0;
+            posession = 50;
             fouls = 0;
             yellowCards = 0;
             redCards = 0;

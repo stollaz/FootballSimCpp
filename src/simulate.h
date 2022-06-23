@@ -115,7 +115,7 @@ bool AttemptShot(TeamGameStats& team1stats, TeamGameStats& team2stats, PlayerInG
     PlayerInGame gk = isTeam1 ? team2stats.players.at(0) : team1stats.players.at(0);
 
     if (isTeam1) team1stats.shots++;
-    else team2stats.shotAccuracy++;
+    else team2stats.shots++;
 
     if (show){
         if (isTeam1) fmt::print("> [{}] {} attempts a shot.\n",team1stats.team.name, attacker.player.name);
@@ -129,7 +129,7 @@ bool AttemptShot(TeamGameStats& team1stats, TeamGameStats& team2stats, PlayerInG
     double hitchance = GenerateOneNormal(40,25);
 
     if (attacker.player.finishing < hitchance){
-        attacker.rating-=0.3; // Decrease rating for missed shot
+        attacker.rating-=0.2; // Decrease rating for missed shot
         if (show){
             fmt::print(fg(fmt::color::red), "MISS. ");
             fmt::print("{} missed the target.\n",attacker.player.name);
@@ -137,15 +137,17 @@ bool AttemptShot(TeamGameStats& team1stats, TeamGameStats& team2stats, PlayerInG
         return false;
     }
 
-    if (isTeam1) team1stats.shotsOnTarget++; else team2stats.shotAccuracy++;
+    if (isTeam1) team1stats.shotsOnTarget++; 
+    else team2stats.shotsOnTarget++;
 
     double shotchance = Sigmoid(attacker.player.finishing, gk.player.goalPrevention);
     double randnum = dist(gen);
 
     if (randnum < shotchance){
         attacker.rating+=1; // Increase p1 rating for goal
-        gk.rating-=0.5; // Decreate keeper rating for failed save
-        team1stats.goals++;
+        gk.rating-=0.3; // Decreate keeper rating for failed save
+        if (isTeam1) team1stats.goals++;
+        else team2stats.goals++;
         if (show){
             fmt::print(fg(fmt::color::green),"GOAL! ");
             if (isTeam1) fmt::print("{} scores for {}!\n",attacker.player.name,team1stats.team.name);
@@ -154,7 +156,7 @@ bool AttemptShot(TeamGameStats& team1stats, TeamGameStats& team2stats, PlayerInG
         return true;
     }
     else{
-        attacker.rating+=0.3; // Slightly increase rating for shot on target
+        attacker.rating+=0.2; // Slightly increase rating for shot on target
         gk.rating+=0.5; // Increase keeper rating for save
         team2stats.saves++;
         if (show){
@@ -198,7 +200,7 @@ bool AttemptShot(Game& game, TeamGameStats& team1stats, TeamGameStats& team2stat
     PlayerInGame gk = isTeam1 ? team2stats.players[0] : team1stats.players[0];
 
     if (isTeam1) team1stats.shots++;
-    else team2stats.shotAccuracy++;
+    else team2stats.shots++;
 
     if (isTeam1) game.AddToLog(LogItem(ItemType::TextLine,fmt::format("> [{}] {} attempts a shot.",team1stats.team.name, attacker.player.name)));
     else game.AddToLog(LogItem(ItemType::TextLine,fmt::format("> [{}] {} attempts a shot.",team2stats.team.name, attacker.player.name)));
@@ -216,7 +218,8 @@ bool AttemptShot(Game& game, TeamGameStats& team1stats, TeamGameStats& team2stat
         return false;
     }
 
-    if (isTeam1) team1stats.shotsOnTarget++; else team2stats.shotAccuracy++;
+    if (isTeam1) team1stats.shotsOnTarget++;
+    else team2stats.shotsOnTarget++;
 
     double shotchance = Sigmoid(attacker.player.finishing, gk.player.goalPrevention);
     double randnum = dist(gen);
@@ -225,7 +228,8 @@ bool AttemptShot(Game& game, TeamGameStats& team1stats, TeamGameStats& team2stat
         attacker.rating+=1; // Increase p1 rating for goal
         if (isTeam1) team2stats.players[0].rating-=0.5; // Decrease keeper rating for failed save
         else team1stats.players[0].rating-=0.5;
-        team1stats.goals++;
+        if (isTeam1) team1stats.goals++;
+        else team2stats.goals++;
         game.AddToLog(LogItem(ItemType::Text,fmt::format(fg(fmt::color::lime_green),"GOAL! ")));
         if (isTeam1) game.AddToLog(LogItem(ItemType::Text,fmt::format("{} scores for {}!\n",attacker.player.name,team1stats.team.name)));
         else game.AddToLog(LogItem(ItemType::Text,fmt::format("{} scores for {}!\n",attacker.player.name,team2stats.team.name)));
@@ -358,6 +362,85 @@ void GiveCard(Game& game, PlayerInGame& p, bool isYellow = true, bool show = tru
         game.AddToLog(LogItem(ItemType::Text,fmt::format(fg(fmt::color::red),"RED CARD! ")));
         game.AddToLog(LogItem(ItemType::Text,fmt::format("{} has been sent off.\n",p.player.name)));
         p.rating-=2;
+    }
+}
+
+int EndGameMenu(){
+    int option = -1;
+    std::string input;
+
+    fmt::print("1. Display Goalscorers\n");
+    fmt::print("2. Display Game Stats\n");
+    fmt::print("3. Display Player Ratings\n");
+    fmt::print("4. Simulate Game Again (Step by Step)\n");
+    fmt::print("5. Simulate Game Again (Skip to Result)\n");
+    fmt::print("0. Exit\n");
+    fmt::print("---\n> ");
+
+    std::cin >> input;
+
+    if (!isStringInt(input)) option = -1; // If input is not a number set to default
+    else if (std::stoi(input) > 9 || std::stoi(input) < 0) option = -1; // If input is number but out of range set to default
+    else option = std::stoi(input); // Otherwise convert to integer
+
+    return option;
+}
+
+void PrintStats(TeamGameStats team1, TeamGameStats team2){
+    team1.CalculatePassAccuracy();
+    team1.CalculateShotAccuracy();
+    team2.CalculatePassAccuracy();
+    team2.CalculateShotAccuracy();
+
+    fmt::print("GAME STATS\n");
+
+    size_t padValue = 5;
+    if (team1.team.name.size() > padValue) padValue = team1.team.name.size();
+    if (team2.team.name.size() > padValue) padValue = team2.team.name.size();
+
+    fmt::print("{2:<17} {0:>{3}} - {1:<{3}}\n",team1.team.name, team2.team.name, "", padValue);
+    fmt::print("{2:<17} {0:>{3}} - {1:<{3}}\n",team1.goals, team2.goals, "Goals", padValue);
+    fmt::print("{2:<17} {0:>{3}} - {1:<{3}}\n",(std::to_string(team1.posession) + "%"), (std::to_string(team2.posession) + "%"), "Posession", padValue); // Add %
+    fmt::print("{2:<17} {0:>{3}} - {1:<{3}}\n",team1.shots, team2.shots, "Shots", padValue);
+    fmt::print("{2:<17} {0:>{3}} - {1:<{3}}\n",team1.shotsOnTarget, team2.shotsOnTarget, "Shots On Target", padValue);
+    fmt::print("{2:<17} {0:>{3}} - {1:<{3}}\n",team1.passesAttempted, team2.passesAttempted, "Passes Attempted", padValue);
+    fmt::print("{2:<17} {0:>{3}} - {1:<{3}}\n",team1.passes, team2.passes, "Passes Completed", padValue);
+    fmt::print("{2:<17} {0:>{3}} - {1:<{3}}\n",team1.saves, team2.saves, "Saves", padValue);
+    fmt::print("{2:<17} {0:>{3}} - {1:<{3}}\n",team1.tackles, team2.tackles, "Tackles", padValue);
+    fmt::print("{2:<17} {0:>{3}} - {1:<{3}}\n",team1.interceptions, team2.interceptions, "Interceptions", padValue);
+    fmt::print("{2:<17} {0:>{3}} - {1:<{3}}\n",team1.fouls, team2.fouls, "Fouls", padValue);
+    fmt::print("{2:<17} {0:>{3}} - {1:<{3}}\n",team1.yellowCards, team2.yellowCards, "Yellow Cards", padValue);
+    fmt::print("{2:<17} {0:>{3}} - {1:<{3}}\n",team1.redCards, team2.redCards, "Red Cards", padValue);
+    fmt::print("{2:<17} {0:>{3}} - {1:<{3}}\n",(std::to_string(team1.shotAccuracy) + "%"), (std::to_string(team2.shotAccuracy) + "%"), "Shot Accuracy", padValue);
+    fmt::print("{2:<17} {0:>{3}} - {1:<{3}}\n",(std::to_string(team1.passAccuracy) + "%"), (std::to_string(team2.passAccuracy) + "%"), "Pass Accuracy", padValue);
+}
+
+void PrintRatings(TeamGameStats team1, TeamGameStats team2){
+    fmt::print("PLAYER RATINGS: \n");
+    fmt::print("{}: \n",team1.team.name);
+
+    fmt::print("--------[9]-------\n------------------\n[7]----[10]---[11]\n------------------\n----[6]-----[8]---\n------------------\n[2]--[4]--[5]--[3]\n--------[1]-------\n\n");
+    /*foreach (var p in t1){
+        Console.Write(p.Player.ToString() + ", "); 
+        PrintRatingWithColour(p.Rating);
+    }*/
+
+    for (PlayerInGame p : team1.players){
+        fmt::print("{}, ",p.player.ToString());
+        PrintRatingWithColour(p.rating);
+    }
+
+    fmt::print("\n{}: \n",team2.team.name);
+    
+    fmt::print("\n--------[9]-------\n------------------\n[7]----[10]---[11]\n------------------\n----[6]-----[8]---\n------------------\n[2]--[4]--[5]--[3]\n--------[1]-------\n\n");
+    /*foreach (var p in t2){
+        Console.Write(p.Player.ToString() + ", "); 
+        PrintRatingWithColour(p.Rating);
+    }*/
+
+    for (PlayerInGame p : team2.players){
+        fmt::print("{}, ",p.player.ToString());
+        PrintRatingWithColour(p.rating);
     }
 }
 
@@ -818,6 +901,7 @@ void SimulateGameOld(Team team1, Team team2, bool show = true){
 }
 
 void SimulateGame(Team team1, Team team2, bool show = true){
+    system("cls");
     fmt::print("Welcome to the game between {} and {}!\n\n",team1.name, team2.name);
 
     int team1_score = 0;
@@ -854,7 +938,7 @@ void SimulateGame(Team team1, Team team2, bool show = true){
         fmt::print("\n");
     }
 
-    for (int i = 0; i <= 90; i+=3){ // Simulate in 5 minute increments
+    for (int i = 0; i <= 90; i+=3){ // Simulate in 3 minute increments
         // Setup printing the time correctly
         std::string ord = "";
         if (i%10 == 1 && i!=11) ord = "st";
@@ -870,14 +954,21 @@ void SimulateGame(Team team1, Team team2, bool show = true){
         int choice = rand() % 3;
 
         // Pick 2 random players per team to execute the actions
-        PlayerInGame t1_p1 = playersInGame1[rand()%10+1]; // tX_pY = team X, player Y
-        while (t1_p1.sentOff) t1_p1 = playersInGame1[rand()%10+1];
-        PlayerInGame t1_p2 = playersInGame1[rand()%10+1];
-        while (t1_p2.sentOff) t1_p2 = playersInGame1[rand()%10+1];
-        PlayerInGame t2_p1 = playersInGame2[rand()%10+1];
-        while (t2_p1.sentOff) t2_p1 = playersInGame2[rand()%10+1];
-        PlayerInGame t2_p2 = playersInGame2[rand()%10+1];
-        while (t2_p2.sentOff) t2_p2 = playersInGame2[rand()%10+1];
+        PlayerInGame *t1_p1;
+        t1_p1 = &team1stats.players[rand()%10+1]; // tX_pY = team X, player Y
+        while ((*t1_p1).sentOff) t1_p1 = &team1stats.players[rand()%10+1];
+
+        PlayerInGame *t1_p2;
+        t1_p2 = &team1stats.players[rand()%10+1];
+        while ((*t1_p2).sentOff) t1_p2 = &team1stats.players[rand()%10+1];
+
+        PlayerInGame *t2_p1;
+        t2_p1 = &team2stats.players[rand()%10+1];
+        while ((*t2_p1).sentOff) t2_p1 = &team2stats.players[rand()%10+1];
+
+        PlayerInGame *t2_p2;
+        t2_p2 = &team2stats.players[rand()%10+1];
+        while ((*t2_p2).sentOff) t2_p2 = &team2stats.players[rand()%10+1];
 
         // Initialise pointers to variables and functions for attacking and defending teams
         // The attacking team is the team taking the action, and vice versa
@@ -912,11 +1003,11 @@ void SimulateGame(Team team1, Team team2, bool show = true){
             attackingTeamStats = &team1stats;
             defendingTeamStats = &team2stats;
 
-            attacker1 = &t1_p1;
-            attacker2 = &t1_p2;
+            attacker1 = t1_p1;
+            attacker2 = t1_p2;
 
-            defender1 = &t2_p1;
-            defender2 = &t2_p2;
+            defender1 = t2_p1;
+            defender2 = t2_p2;
 
             attacker_score = &team1_score;
             defender_score = &team2_score;
@@ -934,11 +1025,11 @@ void SimulateGame(Team team1, Team team2, bool show = true){
             attackingTeamStats = &team2stats;
             defendingTeamStats = &team1stats;
 
-            attacker1 = &t2_p1;
-            attacker2 = &t2_p2;
+            attacker1 = t2_p1;
+            attacker2 = t2_p2;
 
-            defender1 = &t1_p1;
-            defender2 = &t1_p2;
+            defender1 = t1_p1;
+            defender2 = t1_p2;
 
             attacker_score = &team2_score;
             defender_score = &team1_score;
@@ -1147,7 +1238,38 @@ void SimulateGame(Team team1, Team team2, bool show = true){
     fmt::print(fg(fmt::color::red), "FULL TIME!\n");
     fmt::print("Final Score: {} {} - {} {}\n", team1.name, team1_score, team2_score, team2.name);
 
-    fmt::print("\nAdditional Options: ");
-    // int option = 0;
+    fmt::print("\nAdditional Options: \n");
+    int option = -1;
     // Do endgame menu
+
+    while (option != 0 && option != 4 && option != 5){
+        option = EndGameMenu();
+
+        switch(option){
+            case 1:
+                fmt::print("\nGoalscorers:\n");
+                for (Goal g : goals) g.GoalInfo();
+                fmt::print("\n=========\n");
+                system("pause");
+                break;
+            case 2:
+                PrintStats(team1stats, team2stats);
+                fmt::print("\n=========\n");
+                system("pause");
+                break;
+            case 3:
+                PrintRatings(team1stats, team2stats);
+                fmt::print("\n=========\n");
+                system("pause");
+                break;
+            case 4:
+                SimulateGame(team1, team2, true);
+                break;
+            case 5:
+                SimulateGame(team1, team2, false);
+                break;
+            case 0:
+                break;
+        }
+    }
 }

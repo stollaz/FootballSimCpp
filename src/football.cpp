@@ -26,7 +26,7 @@
 #include "fmt/xchar.h"
 
 using namespace std;
-#define VERSION "a.3.2022.06.23.1"
+#define VERSION "a.3.2022.06.23.2"
 
 #include <filesystem>
 namespace fs = filesystem;
