@@ -2,7 +2,7 @@
 #define ITEMTYPE
 
 // Enum to store type of action stored in playback
-enum ItemType{
+const enum ItemType{
     Text,
     Colour,
     Read,

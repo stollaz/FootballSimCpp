@@ -10,30 +10,31 @@
 class Player{
     private:
         // Function to calculate the overall of the player (naive approach)
-        int CalculateOverall(){
-            return (dribbling + finishing + tackling + passing + goalPrevention + assisting)/6;
-        }
+        int CalculateOverall();
 
         // Very crude method to calculate positional overall
-        int CalculatePositionalOverall(){
-            if (PositionType(position) == Position::GK) return int(0.3*goalPrevention + 0.3*tackling + 0.2*passing+0.1*assisting+0.05*(dribbling+finishing));
-            else if (PositionType(position) == Position::DF) return int(0.25*goalPrevention+0.25*tackling+0.2*passing+0.12*(assisting+dribbling)+0.06*finishing);
-            else if (PositionType(position) == Position::MF) return int(0.25*passing+0.25*assisting+0.2*dribbling+0.1*(finishing+goalPrevention+tackling));
-            else if (PositionType(position) == Position::FW) return int(0.5*finishing+0.2*dribbling+0.1*(passing+assisting)+0.05*(goalPrevention+tackling));
-            else return int((dribbling + finishing + tackling + passing + goalPrevention + assisting)/6);
-        }
+        int CalculatePositionalOverall();
 
         // Ensure value is constrained between 0 and 99
-        int Constrain(int x){
-            if (x > 99) return 99;
-            else if (x < 0) return 0;
-            else return x;
-        }
+        int Constrain(int x);
+
+        void AssignValues(std::string _name, int _number, Position _position, int _dribbling, int _finishing, int _tackling, int _passing, int _assisting, int _goalPrevention);
     public:
         // Constructors
-        Player();
+        Player() = default;
         Player(std::string _name, int _number, Position _position, int _dribbling, int _finishing, int _tackling, int _passing, int _assisting, int _goalPrevention);
         Player(std::string _name, int _number, Position _position, Position _position2, int _dribbling, int _finishing, int _tackling, int _passing, int _assisting, int _goalPrevention);
+
+        // Public function headers
+        Position PositionType(Position p);
+        std::string ToString();
+        fmt::color GetColour(int x);
+        void PrintWithColour(int x);
+        void DisplayStats();
+        std::string CompactRepresentation();
+        std::string PrintingRepresentation();
+        std::string PrintPosition(Position p);    
+        bool Equals(Player p);
 
         // Attributes
         std::string name;
@@ -50,17 +51,6 @@ class Player{
         int overall;
         int positionalOverall;
         // PlayerInGame inGameStats;
-
-        // Public function headers
-        Position PositionType(Position p);
-        std::string ToString();
-        fmt::color GetColour(int x);
-        void PrintWithColour(int x);
-        void DisplayStats();
-        std::string CompactRepresentation();
-        std::string PrintingRepresentation();
-        std::string PrintPosition(Position p);    
-        bool Equals(Player p);
 
         friend bool operator== (Player & lhs, Player & rhs );
 };

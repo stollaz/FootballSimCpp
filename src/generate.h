@@ -8,39 +8,27 @@
 #include "player.h"
 
 std::string GeneratePlayerName(){
-    std::string firstname = "";
-    std::string surname = "";
+    const std::vector<std::string> forenames = ReadAllLines(fs::path("assets/male-names.txt"));
+    const std::vector<std::string> surnames = ReadAllLines(fs::path("assets/surnames-clean.txt"));
 
-    // srand(time(NULL));
-    // unsigned seed = std::chrono::system_clock::now().time_since_epoch().count()*std::chrono::high_resolution_clock::now().time_since_epoch().count();
-    // std::default_random_engine generator(seed);
+    const int num1 = rand() % forenames.size();
+    const std::string firstname = forenames[num1];
 
-    std::vector<std::string> forenames = ReadAllLines(fs::path("assets/male-names.txt"));
-    std::vector<std::string> surnames = ReadAllLines(fs::path("assets/surnames-clean.txt"));
-
-    int num = rand() % forenames.size();
-    firstname = forenames[num];
-
-    num = rand() % surnames.size();
-    surname = surnames[num];
+    const int num2 = rand() % surnames.size();
+    const std::string surname = surnames[num2];
 
     return fmt::format("{} {}",firstname, surname);
 }
 
 std::string GenerateTeamName(){
-    std::string town = "";
-    std::string extension = "";
+    const std::vector<std::string> town_file = ReadAllLines("assets/towns.txt");
+    const std::vector<std::string> ex_file = ReadAllLines("assets/team_extensions.txt");
 
-    // srand(time(NULL));
+    const int num1 = rand() % town_file.size();
+    const std::string town = town_file[num1];
 
-    std::vector<std::string> town_file = ReadAllLines("assets/towns.txt");
-    std::vector<std::string> ex_file = ReadAllLines("assets/team_extensions.txt");
-
-    int num = rand() % town_file.size();
-    town = town_file[num];
-
-    num = rand() % ex_file.size();
-    extension = ex_file[num];
+    const int num2 = rand() % ex_file.size();
+    const std::string extension = ex_file[num2];
 
     return town + " " + extension;
 }

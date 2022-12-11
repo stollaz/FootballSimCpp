@@ -58,6 +58,16 @@
         "ratio": "cpp",
         "vector": "cpp",
         "random": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "charconv": "cpp",
+        "format": "cpp",
+        "mutex": "cpp",
+        "thread": "cpp",
+        "clocale": "cpp",
+        "forward_list": "cpp",
+        "map": "cpp",
+        "optional": "cpp",
+        "stop_token": "cpp",
+        "xtree": "cpp"
     }
 }

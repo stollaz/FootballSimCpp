@@ -996,50 +996,76 @@ void SimulateGame(Team team1, Team team2, bool show = true){
         bool defender;
 
         // Assign pointers for if Team 1 is the attacking team, and vice versa for the else
+        attackingTeam = isTeam1 ? &team1 : &team2;
+        defendingTeam = isTeam1 ? &team2 : &team1;
+
+        attackingTeamStats = isTeam1 ? &team1stats : &team2stats;
+        defendingTeamStats = isTeam1 ? &team2stats : &team1stats;
+
+        attacker1 = isTeam1 ? t1_p1 : t2_p1;
+        attacker2 = isTeam1 ? t1_p2 : t2_p2;
+
+        defender1 = isTeam1 ? t2_p1 : t1_p1;
+        defender2 = isTeam1 ? t2_p2 : t1_p2;
+
+        attacker_score = isTeam1 ? &team1_score : &team2_score;
+        defender_score = isTeam1 ? &team2_score : &team1_score;
+
         if (isTeam1){
-            attackingTeam = &team1;
-            defendingTeam = &team2;
-
-            attackingTeamStats = &team1stats;
-            defendingTeamStats = &team2stats;
-
-            attacker1 = t1_p1;
-            attacker2 = t1_p2;
-
-            defender1 = t2_p1;
-            defender2 = t2_p2;
-
-            attacker_score = &team1_score;
-            defender_score = &team2_score;
-
             ShowAttackingTeamScored = &ShowTeam1Scored;
             ShowDefendingTeamScored = &ShowTeam2Scored;
-
-            attacker = true;
-            defender = false;
         }
         else{
-            attackingTeam = &team2;
-            defendingTeam = &team1;
-
-            attackingTeamStats = &team2stats;
-            defendingTeamStats = &team1stats;
-
-            attacker1 = t2_p1;
-            attacker2 = t2_p2;
-
-            defender1 = t1_p1;
-            defender2 = t1_p2;
-
-            attacker_score = &team2_score;
-            defender_score = &team1_score;
-
             ShowAttackingTeamScored = &ShowTeam2Scored;
             ShowDefendingTeamScored = &ShowTeam1Scored;
-
-            attacker = false;
-            defender = true;
         }
+
+        attacker = isTeam1;
+        defender = !attacker;
+        // if (isTeam1){
+        //     attackingTeam = &team1;
+        //     defendingTeam = &team2;
+
+        //     attackingTeamStats = &team1stats;
+        //     defendingTeamStats = &team2stats;
+
+        //     attacker1 = t1_p1;
+        //     attacker2 = t1_p2;
+
+        //     defender1 = t2_p1;
+        //     defender2 = t2_p2;
+
+        //     attacker_score = &team1_score;
+        //     defender_score = &team2_score;
+
+        //     ShowAttackingTeamScored = &ShowTeam1Scored;
+        //     ShowDefendingTeamScored = &ShowTeam2Scored;
+
+        //     attacker = true;
+        //     defender = false;
+        // }
+        // else{
+        //     attackingTeam = &team2;
+        //     defendingTeam = &team1;
+
+        //     attackingTeamStats = &team2stats;
+        //     defendingTeamStats = &team1stats;
+
+        //     attacker1 = t2_p1;
+        //     attacker2 = t2_p2;
+
+        //     defender1 = t1_p1;
+        //     defender2 = t1_p2;
+
+        //     attacker_score = &team2_score;
+        //     defender_score = &team1_score;
+
+        //     ShowAttackingTeamScored = &ShowTeam2Scored;
+        //     ShowDefendingTeamScored = &ShowTeam1Scored;
+
+        //     attacker = false;
+        //     defender = true;
+        // }
 
         // ------------------------------------------------------
         // Now the setup is finished, we can begin the simulation
@@ -1048,7 +1074,7 @@ void SimulateGame(Team team1, Team team2, bool show = true){
         (*attackingTeamStats).posession+=2;
         (*defendingTeamStats).posession-=2;
 
-        Position pos = (*attacker1).player.position;
+        const Position pos = (*attacker1).player.position;
         if (pos == Position::CB || pos == Position::LB || pos == Position::RB){
             if (choice == 2) choice = rand()%3; // If defender tries to shoot, attempt a reroll
         }
@@ -1059,7 +1085,7 @@ void SimulateGame(Team team1, Team team2, bool show = true){
         if (choice == 0){ // PASS
             fmt::print("> [{}] {} attempts to pass to {}.\n",(*attackingTeam).name, (*attacker1).player.name, (*attacker2).player.name);
 
-            bool passed = AttemptPass(*attacker1, *attacker2, *defender1, show); // Determine success of pass
+            const bool passed = AttemptPass(*attacker1, *attacker2, *defender1, show); // Determine success of pass
             (*attackingTeamStats).passesAttempted++; // Increment attempted passes counter
 
             if (passed){ // If pass was successful
@@ -1074,9 +1100,9 @@ void SimulateGame(Team team1, Team team2, bool show = true){
 
                 // If reciever has high finishing and mentality, take a shot
                 if ((*attacker2).player.finishing >= 50){
-                    int a = rand() % 100;
+                    const int a = rand() % 100;
                     if ((*attacker2).player.mentality > a){
-                        bool scored = AttemptShot(team1stats, team2stats, *attacker2, attacker, show); // Shoot
+                        const bool scored = AttemptShot(team1stats, team2stats, *attacker2, attacker, show); // Shoot
                         if (scored){
                             (*attacker_score)++;
                             ShowAttackingTeamScored(team1, team2, team1_score, team2_score);
@@ -1097,9 +1123,9 @@ void SimulateGame(Team team1, Team team2, bool show = true){
 
                 // If intercepter has high finishing (or is a forward) and mentality, take a shot
                 if ((*defender1).player.finishing >= 50 || (*defender1).player.PositionType((*defender1).player.position) == Position::FW){
-                    int a = rand() % 100;
+                    const int a = rand() % 100;
                     if ((*defender1).player.mentality > a){
-                        bool scored = AttemptShot(team1stats, team2stats, *defender1, defender, show);
+                        const bool scored = AttemptShot(team1stats, team2stats, *defender1, defender, show);
                         if (scored){
                             (*defender_score)++;
                             ShowDefendingTeamScored(team1, team2, team1_score, team2_score);
@@ -1112,7 +1138,7 @@ void SimulateGame(Team team1, Team team2, bool show = true){
         else if (choice == 1){ // DRIBBLE
             fmt::print("> [{}] {} attempts to dribble.\n",(*attackingTeam).name, (*attacker1).player.name);
 
-            bool dribbled = AttemptDribble(*attacker1, *defender1, show);
+            const bool dribbled = AttemptDribble(*attacker1, *defender1, show);
 
             if (dribbled){ // If dribble is successful
                 (*attacker1).rating+=0.5; // Incremement attacker's rating for successful dribble
@@ -1122,9 +1148,9 @@ void SimulateGame(Team team1, Team team2, bool show = true){
 
                 // If attacking player has high finishing and mentality, take a shot
                 if ((*attacker1).player.finishing >= 50){
-                    int a = rand() % 100;
+                    const int a = rand() % 100;
                     if ((*attacker1).player.mentality > a){
-                        bool scored = AttemptShot(team1stats, team2stats, *attacker1, attacker, show);
+                        const bool scored = AttemptShot(team1stats, team2stats, *attacker1, attacker, show);
                         if (scored){
                             (*attacker_score)++;
                             ShowAttackingTeamScored(team1, team2, team1_score, team2_score);
@@ -1137,7 +1163,7 @@ void SimulateGame(Team team1, Team team2, bool show = true){
                 (*defendingTeamStats).tackles++;
 
                 // If tackling player has low mentality, have a chance to commit a foul
-                int b = rand() % 50;
+                const int b = rand() % 50;
                 if ((*defender1).player.mentality < b){
                     (*defender1).rating-=0.3; // Reduce rating for foul
                     (*defendingTeamStats).fouls++;
@@ -1145,15 +1171,15 @@ void SimulateGame(Team team1, Team team2, bool show = true){
                     fmt::print("{} fouled {}.\n", (*defender1).player.name, (*attacker1).player.name);
 
                     // Decide if a card should be shown
-                    int yellowNum = GenerateOneNormal(30,10); // Generate random number for yellow card
-                    double yellowThreshold = Sigmoid(yellowNum, (*defender1).player.mentality, -0.05, 0); // Determine mentality threshold for yellow card
+                    const int yellowNum = GenerateOneNormal(30,10); // Generate random number for yellow card
+                    const double yellowThreshold = Sigmoid(yellowNum, (*defender1).player.mentality, -0.05, 0); // Determine mentality threshold for yellow card
                     int redNum = GenerateOneNormal(5,2);
                     double redThreshold = Sigmoid(redNum, (*defender1).player.mentality, -0.063, 0.5);
                     while (redThreshold > yellowThreshold){ // Reroll until red card threshold is lower than yellow card threshold
                         redNum = GenerateOneNormal(5,2);
                         redThreshold = Sigmoid(redNum, (*defender1).player.mentality, -0.063, 0.5);
                     }
-                    double randNum = GenerateRandomDouble();
+                    const double randNum = GenerateRandomDouble();
 
                     if (randNum < redThreshold){ // Player should be sent off
                         (*defender1).GiveCard(false);
@@ -1176,7 +1202,7 @@ void SimulateGame(Team team1, Team team2, bool show = true){
                     else if ((*attacker1).player.PositionType((*attacker1).player.position) == Position::FW 
                             || (*attacker1).player.position == Position::AM || (*attacker1).player.position == Position::LM 
                             || (*attacker1).player.position == Position::RM || (*attacker1).player.position == Position::CM){
-                        int c = rand() % 100;
+                        const int c = rand() % 100;
                         if ((*attacker1).player.mentality > c){
                             scored = AttemptSetPiece(team1stats, team2stats, false, attacker, show); // Penalty
                         }
@@ -1204,9 +1230,9 @@ void SimulateGame(Team team1, Team team2, bool show = true){
                     // fmt::print("> {} tackled {}.\n",(*defender1).player.name, (*attacker1).player.name);
 
                     if ((*defender1).player.finishing >= 50){
-                        int a = rand()%100;
+                        const int a = rand()%100;
                         if ((*defender1).player.mentality > a){
-                            bool scored = AttemptShot(team1stats, team2stats, *defender1, defender, show); // TOOD: Check this team is right
+                            const bool scored = AttemptShot(team1stats, team2stats, *defender1, defender, show); // TOOD: Check this team is right
                             if (scored){
                                 (*defender_score)++;
                                 ShowDefendingTeamScored(team1, team2, team1_score, team2_score);
@@ -1221,7 +1247,7 @@ void SimulateGame(Team team1, Team team2, bool show = true){
             (*attackingTeamStats).posession+=2;
             (*defendingTeamStats).posession-=2;
 
-            bool scored = AttemptShot(team1stats, team2stats, *attacker1, attacker, show);
+            const bool scored = AttemptShot(team1stats, team2stats, *attacker1, attacker, show);
             if (scored){
                 (*attacker_score)++;
                 ShowAttackingTeamScored(team1, team2, team1_score, team2_score);
@@ -1248,7 +1274,7 @@ void SimulateGame(Team team1, Team team2, bool show = true){
         switch(option){
             case 1:
                 fmt::print("\nGoalscorers:\n");
-                for (Goal g : goals) g.GoalInfo();
+                for (Goal g : goals) g.PrintGoalInfo();
                 fmt::print("\n=========\n");
                 system("pause");
                 break;

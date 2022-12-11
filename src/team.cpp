@@ -8,13 +8,13 @@ Team::Team(){}
 
 // Constructor to create empty team with given name
 Team::Team(std::string _name){
-    Team::name = _name;
-    Team::InitialiseTeam();
+    name = _name;
+    InitialiseTeam();
 }
 
 // Add a specified player to the team, with the index of their number-1
 void Team::AddPlayer(Player p){
-    int index = p.number -1;
+    const int index = p.number -1;
     if (!players[index].Equals(null_player)) fmt::print("Player with this number already exists. Try again.\n");
     else players[index] = p;
 }
@@ -35,11 +35,11 @@ void Team::CalculateRating(){
 // Save the team to a file
 void Team::SaveTeam(){
     int count = 1;
-    std::string fullPath = "assets/teams/" + name + ".txt";
+    const std::string fullPath = "assets/teams/" + name + ".txt";
 
-    std::string fileNameOnly = name;
-    std::string extension = ".txt";
-    std::string path = "assets/teams/";
+    const std::string fileNameOnly = name;
+    const std::string extension = ".txt";
+    const std::string path = "assets/teams/";
     
     std::string newFullPath = fullPath;
 

@@ -4,11 +4,11 @@
 #include "fmt/color.h"
 
 Goal::Goal(std::string _name, std::string _team, int _minute){
-    Goal::name = _name;
-    Goal::team = _team;
-    Goal::minute = _minute;
+    m_name = _name;
+    m_team = _team;
+    m_minute = _minute;
 }
 
-void Goal::GoalInfo(){
-    fmt::print("{}' - {} [{}]\n", minute, name, team);
+void Goal::PrintGoalInfo(){
+    fmt::print("{}' - {} [{}]\n", m_minute, m_name, m_team);
 }

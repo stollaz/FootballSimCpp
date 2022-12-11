@@ -9,7 +9,7 @@
 
 class Team{
     private:
-        Player null_player = Player("null",0,Position::GK,0,0,0,0,0,0); // Dummy null player used as placeholder
+        const Player null_player = Player("null",0,Position::GK,0,0,0,0,0,0); // Dummy null player used as placeholder
 
     public:
         // Constructors
@@ -26,6 +26,8 @@ class Team{
         void InitialiseTeam();    // Method to initialise the team with null players
         void CalculateRating();   // Method to calculate the average rating for the team
         void SaveTeam();          // Method to save the team to a file
+
+        constexpr Team &Team::operator=(const Team &);
 };
 
 #endif

@@ -56,8 +56,8 @@ int CountLines(fs::path p){
 
 // Function to create a probability based on the similarity of two stats, along with tightness and offset parameters
 double Sigmoid(int stat1, int stat2, double tightness =-0.05, double offset = 0.5){
-    int x = stat1 - stat2;
-    double b = tightness;
+    const int x = stat1 - stat2;
+    const double b = tightness;
     return 1/(1+exp(offset+b*x));
 }
 
@@ -65,7 +65,7 @@ double Sigmoid(int stat1, int stat2, double tightness =-0.05, double offset = 0.
 // One generator should be used for many random numbers to avoid repeats, so this should only be created
 // for each batch of random numbers, not for each individual number
 std::default_random_engine CreateGenerator() {
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count()*std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count()*std::chrono::high_resolution_clock::now().time_since_epoch().count();
     std::default_random_engine generator(seed);
     return generator;
 }
@@ -85,7 +85,7 @@ int GenerateNormal(std::default_random_engine generator, std::normal_distributio
 // Only use this version when generating a single normal distribution number
 // If multiple are generated in quick succession, it will output duplicates
 int GenerateOneNormal(int mean, float std){
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count()*std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count()*std::chrono::high_resolution_clock::now().time_since_epoch().count();
     std::default_random_engine generator(seed);
     std::normal_distribution<double> dist(mean,std);
 
@@ -108,12 +108,12 @@ fmt::color GetColour(int x){
 }
 
 void PrintWithColour(int x){
-    fmt::color c = GetColour(x);
+    const fmt::color c = GetColour(x);
     fmt::print(fg(c),"{}\n", x);
 }
 
 void PrintPositionWithColour(int x){
-    fmt::color c = GetColour(x);
+    const fmt::color c = GetColour(x);
     fmt::print("[");
     fmt::print(fg(c),"{}", x);
     fmt::print("]\n");
@@ -135,7 +135,7 @@ void PrintRatingWithColour(double rating, bool newline = true){
 }
 
 void PrintRatingWithColour(PlayerInGame p, bool newline = true){
-    double rating = p.rating;
+    const double rating = p.rating;
     fmt::color c;
     if (rating <= 5.0) c = fmt::color::indian_red;
     else if (rating < 6.0) c = fmt::color::red;

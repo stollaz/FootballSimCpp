@@ -1,7 +1,7 @@
 #include <vector>
 #include <string>
 
-std::vector<std::string> DATA = {
+const std::vector<std::string> DATA = {
     "NON_PEN_GOALS",
     "NON_PEN_XG",
     "TOTAL_SHOTS",
@@ -37,7 +37,7 @@ std::vector<std::string> DATA = {
     "AVG_DISTANCE_OF_DEFENSIVE_ACTIONS"
 };
 
-std::vector<std::string> FW_DATA = {
+const std::vector<std::string> FW_DATA = {
     "NON_PEN_GOALS",
     "NON_PEN_XG",
     "TOTAL_SHOTS",
@@ -46,7 +46,7 @@ std::vector<std::string> FW_DATA = {
     "NON_PEN_XG+XA",
     "SHOT_CREATIONS"
 };
-std::vector<std::string> MF_DATA = {
+const std::vector<std::string> MF_DATA = {
     "PASSES_ATTEMPTED",
     "PASS_COMPLETION_PERCENTAGE",
     "PROGRESSIVE_PASSES",
@@ -55,7 +55,7 @@ std::vector<std::string> MF_DATA = {
     "TOUCHES_IN_AREA",
     "PROGRESSIVE_PASSES_RECIEVED"
 };
-std::vector<std::string> DF_DATA = {
+const std::vector<std::string> DF_DATA = {
     "PRESSURES",
     "TACKLES",
     "INTERCEPTIONS",
@@ -63,7 +63,7 @@ std::vector<std::string> DF_DATA = {
     "CLEARANCES",
     "AERIAL_DUELS_WON"
 };
-std::vector<std::string> GK_DATA = {
+const std::vector<std::string> GK_DATA = {
     "POST_SHOT_XG-CONCEDED",
     "GOALS_CONCEDED",
     "SAVE_PERCENTAGE",

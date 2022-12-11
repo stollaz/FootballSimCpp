@@ -5,13 +5,14 @@
 #define LOGITEM
 
 class LogItem{
-    private:
     public:
-        ItemType itemType;
-        std::string itemValue;
+        ItemType m_itemType;
+        std::string m_itemValue;
 
         LogItem(ItemType type, std::string value);
         LogItem(std::string type, std::string value);
+    
+    private:
 };
 
 #endif

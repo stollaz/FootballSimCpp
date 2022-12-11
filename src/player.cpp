@@ -4,55 +4,73 @@ Player::Player(){}
 
 // Constructor for player with 1 position
 Player::Player(std::string _name, int _number, Position _position, int _dribbling, int _finishing, int _tackling, int _passing, int _assisting, int _goalPrevention){
-    Player::name = _name;
-    Player::number = _number;
-    Player::position = _position;
-    Player::dribbling = Constrain(_dribbling);
-    Player::finishing = Constrain(_finishing);
-    Player::tackling = Constrain(_tackling);
-    Player::passing = Constrain(_passing);
-    Player::assisting = Constrain(_assisting);
-    Player::goalPrevention = Constrain(_goalPrevention);
-    Player::mentality = 100-Player::tackling;
-    overall = CalculateOverall();
-    positionalOverall = CalculatePositionalOverall();
+    AssignValues(_name, _number, _position, _dribbling, _finishing, _tackling, _passing, _assisting, _goalPrevention);
 }
 
 // Constructor for player with 2 positions
 Player::Player(std::string _name, int _number, Position _position, Position _position2, int _dribbling, int _finishing, int _tackling, int _passing, int _assisting, int _goalPrevention){
-    Player::name = _name;
-    Player::number = _number;
-    Player::position = _position;
-    Player::position2 = _position2;
-    Player::dribbling = Constrain(_dribbling);
-    Player::finishing = Constrain(_finishing);
-    Player::tackling = Constrain(_tackling);
-    Player::passing = Constrain(_passing);
-    Player::assisting = Constrain(_assisting);
-    Player::goalPrevention = Constrain(_goalPrevention);
-    Player::mentality = 100-Player::tackling;
+    AssignValues(_name, _number, _position, _dribbling, _finishing, _tackling, _passing, _assisting, _goalPrevention);
+    position2 = _position2;
+}
+
+void Player::AssignValues(std::string _name, int _number, Position _position, int _dribbling, int _finishing, int _tackling, int _passing, int _assisting, int _goalPrevention){
+    name = _name;
+    number = _number;
+    position = _position;
+    dribbling = Constrain(_dribbling);
+    finishing = Constrain(_finishing);
+    tackling = Constrain(_tackling);
+    passing = Constrain(_passing);
+    assisting = Constrain(_assisting);
+    goalPrevention = Constrain(_goalPrevention);
+    mentality = 100-tackling;
     overall = CalculateOverall();
     positionalOverall = CalculatePositionalOverall();
+}
+
+// Function to calculate the overall of the player (naive approach)
+int Player::CalculateOverall(){
+    return (dribbling + finishing + tackling + passing + goalPrevention + assisting)/6;
+}
+
+// Very crude method to calculate positional overall
+int Player::CalculatePositionalOverall(){
+    if (PositionType(position) == Position::GK) return int(0.3*goalPrevention + 0.3*tackling + 0.2*passing+0.1*assisting+0.05*(dribbling+finishing));
+    else if (PositionType(position) == Position::DF) return int(0.25*goalPrevention+0.25*tackling+0.2*passing+0.12*(assisting+dribbling)+0.06*finishing);
+    else if (PositionType(position) == Position::MF) return int(0.25*passing+0.25*assisting+0.2*dribbling+0.1*(finishing+goalPrevention+tackling));
+    else if (PositionType(position) == Position::FW) return int(0.5*finishing+0.2*dribbling+0.1*(passing+assisting)+0.05*(goalPrevention+tackling));
+    else return int((dribbling + finishing + tackling + passing + goalPrevention + assisting)/6);
+}
+
+// Ensure value is constrained between 0 and 99
+int Player::Constrain(int x){
+    if (x > 99) return 99;
+    else if (x < 0) return 0;
+    else return x;
 }
 
 // Returns the type of position the input is (either GK, Defender, Midfielder or Forward)
 Position Player::PositionType(Position p){
     switch(p){
-        case Position::GK: return Position::GK;
-        case Position::DF: return Position::DF;
-        case Position::LB: return Position::DF;
-        case Position::RB: return Position::DF;
-        case Position::CB: return Position::DF;
-        case Position::MF: return Position::MF;
-        case Position::CM: return Position::MF;
-        case Position::LM: return Position::MF;
-        case Position::RM: return Position::MF;
-        case Position::AM: return Position::MF;
-        case Position::DM: return Position::MF;
-        case Position::FW: return Position::FW;
-        case Position::ST: return Position::FW;
-        case Position::LW: return Position::FW;
-        case Position::RW: return Position::FW;
+        case Position::GK: 
+            return Position::GK;
+        case Position::LB:
+        case Position::RB:
+        case Position::CB:
+        case Position::DF: 
+            return Position::DF;
+        case Position::CM:
+        case Position::LM:
+        case Position::RM:
+        case Position::AM:
+        case Position::DM:
+        case Position::MF: 
+            return Position::MF;
+        case Position::ST:
+        case Position::LW:
+        case Position::RW:
+        case Position::FW: 
+            return Position::FW;
         default: return p;
     }
 }
@@ -74,7 +92,7 @@ fmt::color Player::GetColour(int x){
 
 // Prints the given number with its corresponding colour
 void Player::PrintWithColour(int x){
-    fmt::color c = GetColour(x);
+    const fmt::color c = GetColour(x);
     fmt::print(fg(c),"{}\n", x);
 }
 
