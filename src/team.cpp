@@ -12,6 +12,14 @@ Team::Team(std::string _name){
     InitialiseTeam();
 }
 
+Team::Team(const Team& _team){
+    name = _team.name;
+    for (int i = 0; i < 11; i++){
+        players[i] = _team.players[i];
+    }
+    rating = _team.rating;
+}
+
 // Add a specified player to the team, with the index of their number-1
 void Team::AddPlayer(Player p){
     const int index = p.number -1;
@@ -53,4 +61,8 @@ void Team::SaveTeam(){
 
     writer.close();
     fmt::print("Saved file with path {}\n",newFullPath);
+}
+
+constexpr Team &Team::operator=(Team &_team){
+    return _team;
 }

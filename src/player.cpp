@@ -1,7 +1,5 @@
 #include "player.h"
 
-Player::Player(){}
-
 // Constructor for player with 1 position
 Player::Player(std::string _name, int _number, Position _position, int _dribbling, int _finishing, int _tackling, int _passing, int _assisting, int _goalPrevention){
     AssignValues(_name, _number, _position, _dribbling, _finishing, _tackling, _passing, _assisting, _goalPrevention);

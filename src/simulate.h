@@ -983,7 +983,7 @@ void SimulateGame(Team team1, Team team2, bool show = true){
         PlayerInGame *attacker1;
         PlayerInGame *attacker2;
         PlayerInGame *defender1;
-        PlayerInGame *defender2;
+        //PlayerInGame *defender2;
 
         int *attacker_score;
         int *defender_score;
@@ -1006,7 +1006,7 @@ void SimulateGame(Team team1, Team team2, bool show = true){
         attacker2 = isTeam1 ? t1_p2 : t2_p2;
 
         defender1 = isTeam1 ? t2_p1 : t1_p1;
-        defender2 = isTeam1 ? t2_p2 : t1_p2;
+        //defender2 = isTeam1 ? t2_p2 : t1_p2;
 
         attacker_score = isTeam1 ? &team1_score : &team2_score;
         defender_score = isTeam1 ? &team2_score : &team1_score;

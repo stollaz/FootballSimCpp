@@ -15,6 +15,7 @@ class Team{
         // Constructors
         Team();
         Team(std::string _name);
+        Team(const Team& _team);
         
         // Attributes
         std::string name;   // Name of the team
@@ -27,7 +28,7 @@ class Team{
         void CalculateRating();   // Method to calculate the average rating for the team
         void SaveTeam();          // Method to save the team to a file
 
-        constexpr Team &Team::operator=(const Team &);
+        constexpr Team &operator=(Team &_team);
 };
 
 #endif

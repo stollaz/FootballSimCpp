@@ -2,7 +2,7 @@
 #define POSITION
 
 // Enum to store position of player
-const enum Position{
+enum Position{
     GK,
     LB,
     CB,
